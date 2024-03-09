@@ -22,14 +22,18 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
         Visibility(child: Text('i3Cubes', style: CTextTheme.blackTextTheme.displaySmall,),),
         Expanded(child: Container()), //Spacing
         //notification Icon Button
-        IconButton(onPressed: (){}, icon: const Icon(Icons.notifications_outlined, color: AppColors.cBlackColor,)),
+        IconButton(onPressed: (){
+          //TODO: Notification Feature no needed
+        }, icon: const Icon(Icons.notifications_outlined, color: AppColors.cBlackColor,)),
         //Divider
         Padding(
           padding: const EdgeInsets.fromLTRB(20,0,24,0),
           child: Container(width: 1, height: 22.0, color: AppColors.cGreyColor3,),
         ),
         //Profile Icon
-        CircleAvatar(child: IconButton(onPressed: (){}, icon: const Icon(Icons.person_outline, color: AppColors.cGreyColor2,)),)
+        CircleAvatar(child: IconButton(onPressed: (){
+          //TODO: Profile Pop Up
+        }, icon: const Icon(Icons.person_outline, color: AppColors.cGreyColor2,)),)
       ],
     ),
   );
