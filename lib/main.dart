@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:washcubes_admindashboard/src/features/admin/screens/login/login_page.dart';
+import 'package:washcubes_admindashboard/src/features/operator/screens/homepage/operator_dashboard.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/theme.dart';
 
 void main() {
@@ -15,10 +15,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Admin Website',
+      title: 'Operator Website',
       debugShowCheckedModeBanner: false,
       theme: CAppTheme.lightTheme,
-      home: const AdminLoginPage(),
+      home: const OperatorDashboard(),
     );
   }
 }

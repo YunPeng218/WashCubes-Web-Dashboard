@@ -11,7 +11,7 @@ class CAppTheme {
     outlinedButtonTheme: COutlinedButtonTheme.lightOutlinedButtonTheme,
     elevatedButtonTheme: CElevatedButtonTheme.lightElevatedButtonTheme,
     inputDecorationTheme: CTextFormFieldTheme.lightInputDecorationTheme,
-    pageTransitionsTheme: PageTransitionsTheme(builders: {
+    pageTransitionsTheme: const PageTransitionsTheme(builders: {
       TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
       TargetPlatform.android: FadeUpwardsPageTransitionsBuilder()
     }),
