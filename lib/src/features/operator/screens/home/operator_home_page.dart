@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:washcubes_admindashboard/src/common_widgets/large_screen.dart';
-import 'package:washcubes_admindashboard/src/common_widgets/responsiveness.dart';
-import 'package:washcubes_admindashboard/src/common_widgets/small_screen.dart';
 import 'package:washcubes_admindashboard/src/common_widgets/top_nav.dart';
 import 'package:washcubes_admindashboard/src/features/operator/screens/input_tag/tag_input_popup.dart';
 import 'package:washcubes_admindashboard/src/features/operator/screens/order_detail/order_detail_popup.dart';

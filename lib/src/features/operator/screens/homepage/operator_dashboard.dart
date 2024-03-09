@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:washcubes_admindashboard/src/features/operator/screens/side_menu/operator_side_menu.dart';
 import 'package:washcubes_admindashboard/src/common_widgets/top_nav.dart';
-import 'package:washcubes_admindashboard/src/features/operator/screens/order_table/order_table.dart';
+import 'package:washcubes_admindashboard/src/features/operator/screens/order_list/order_list.dart';
 
 class OperatorDashboard extends StatefulWidget {
   const OperatorDashboard({super.key});

@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:washcubes_admindashboard/src/constants/sizes.dart';
+import 'package:washcubes_admindashboard/src/constants/colors.dart';
+import 'package:washcubes_admindashboard/src/features/operator/screens/input_tag/tag_input_popup.dart';
+import 'package:washcubes_admindashboard/src/features/operator/screens/order_detail/order_detail_popup.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 
 class OrderTable extends StatefulWidget {
@@ -23,23 +23,31 @@ class _OrderTableState extends State<OrderTable> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Orders',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                children: [
+                  Text(
+                    'Orders',
+                    style: CTextTheme.blackTextTheme.displayLarge,
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      //TODO: Refresh List Action
+                    }, 
+                    icon: const Icon(Icons.refresh_rounded, color: AppColors.cBlackColor,),)
+                ],
               ),
               ElevatedButton(
                 onPressed: () {
-                  // Handle Scan Tag button tap
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const InputTagPopUp();
+                    },
+                  );
                 },
-                child: const Text(
+                child: Text(
                   'Scan Tag',
-                  style: TextStyle(
-                    color: Color(0xFF182738),
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: CTextTheme.blackTextTheme.headlineMedium,
                 ),
               ),
             ],
@@ -153,7 +161,7 @@ class OrderList extends StatelessWidget {
               DataCell(
                 ElevatedButton(
                   onPressed: () {
-                    //TODO: Handle check button tap
+                    checkOrderAction(order, context);
                   },
                   child: Text(
                     'Check',
@@ -209,21 +217,67 @@ class OrderList extends StatelessWidget {
     );
   }
 
+  void checkOrderAction(Order order, BuildContext context) {
+    switch (order.status) {
+      case 'Pending':
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const OrderDetailPopUp(orderStatus: 'Pending');
+          },
+        );
+        break;
+      case 'Process':
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const OrderDetailPopUp(orderStatus: 'Process');
+          },
+        );
+        break;
+      case 'Error':
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const OrderDetailPopUp(orderStatus: 'Error');
+          },
+        );
+        break;
+      case 'Ready':
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const OrderDetailPopUp(orderStatus: 'Ready');
+          },
+        );
+        break;
+      case 'Returned':
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const OrderDetailPopUp(orderStatus: 'Returned');
+          },
+        );
+        break;
+      default:
+    }
+  }
+
   // Function to determine status color
   Color _getStatusColor(String status) {
     switch (status) {
       case 'Pending':
-        return const Color(0xFF979797);
+        return Colors.grey;
       case 'Process':
-        return const Color(0xFFF5B436);
+        return Colors.orange;
       case 'Error':
-        return const Color(0xFFFF0000);
+        return Colors.red;
       case 'Ready':
-        return const Color(0xFF1B9544);
+        return Colors.green;
       case 'Returned':
-        return const Color(0xFF438FF7);
+        return Colors.blue;
       default:
-        return Colors.black;
+        return Colors.grey;
     }
   }
 }
