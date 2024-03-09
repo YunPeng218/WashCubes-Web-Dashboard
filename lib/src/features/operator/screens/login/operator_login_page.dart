@@ -4,16 +4,17 @@ import 'package:washcubes_admindashboard/src/constants/colors.dart';
 import 'package:washcubes_admindashboard/src/constants/image_strings.dart';
 import 'package:washcubes_admindashboard/src/constants/sizes.dart';
 import 'package:washcubes_admindashboard/admin_dashboard.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/login/admin_login_page.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 
-class AdminLoginPage extends StatefulWidget {
-  const AdminLoginPage({super.key});
+class OperatorLoginPage extends StatefulWidget {
+  const OperatorLoginPage({super.key});
 
   @override
-  State<AdminLoginPage> createState() => _AdminLoginPageState();
+  State<OperatorLoginPage> createState() => _OperatorLoginPageState();
 }
 
-class _AdminLoginPageState extends State<AdminLoginPage> {
+class _OperatorLoginPageState extends State<OperatorLoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,8 +66,14 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                 const SizedBox(height: 100.0,),
                 //Login Page Switching
                 TextButton(
-                  onPressed: (){}, 
-                  child: Text('Change to Operator Site', style: CTextTheme.whiteTextTheme.headlineLarge,)
+                  onPressed: (){
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AdminLoginPage()),
+                      (route) => false
+                    );
+                  }, 
+                  child: Text('Change to Admin Site', style: CTextTheme.whiteTextTheme.headlineLarge,)
                 ),
               ],
             ),

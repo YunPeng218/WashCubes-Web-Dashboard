@@ -52,6 +52,7 @@ class CTextTheme {
 
   static TextTheme blackTextTheme = createTextTheme(const Color(0xFF1C1C28));
   static TextTheme blueTextTheme = createTextTheme(AppColors.cBlueColor3);
+  static TextTheme redTextTheme = createTextTheme(const Color(0xFFFF0000));
   static TextTheme greyTextTheme = createTextTheme(AppColors.cGreyColor3);
   static TextTheme whiteTextTheme = createTextTheme(AppColors.cWhiteColor);
 }

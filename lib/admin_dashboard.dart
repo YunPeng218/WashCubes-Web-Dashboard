@@ -32,20 +32,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
     {'icon': Icons.logout_rounded,'button-name': 'Log Out', },
   ];
   bool isSelected = false;
-  // Color _buttonColor = Colors.blue;
-  // Color _textColor = Colors.white;
-
-  // void _changeButtonColor() {
-  //   setState(() {
-  //     if (_buttonColor == Colors.blue) {
-  //       _buttonColor = Colors.green;
-  //       _textColor = Colors.black;
-  //     } else {
-  //       _buttonColor = Colors.blue;
-  //       _textColor = Colors.white;
-  //     }
-  //   });
-  // }
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
   @override
   Widget build(BuildContext context) {

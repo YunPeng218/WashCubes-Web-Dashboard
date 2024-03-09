@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:washcubes_admindashboard/src/features/admin/screens/login/login_page.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/login/admin_login_page.dart';
+import 'package:washcubes_admindashboard/src/features/operator/screens/home/operator_home_page.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/theme.dart';
 
 void main() {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       title: 'Admin Website',
       debugShowCheckedModeBanner: false,
       theme: CAppTheme.lightTheme,
-      home: const AdminLoginPage(),
+      home: OperatorHomePage(),
     );
   }
 }
