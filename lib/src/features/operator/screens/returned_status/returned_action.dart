@@ -4,7 +4,7 @@ class OrderDetailsPage extends StatelessWidget {
   final String orderId; // Pass the order ID when navigating to this page
   final Map<String, dynamic> orderData; // Assume this comes from your data source
 
-  OrderDetailsPage({Key? key, required this.orderId, required this.orderData}) : super(key: key);
+  const OrderDetailsPage({Key? key, required this.orderId, required this.orderData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,51 +12,51 @@ class OrderDetailsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Order ID : #$orderId'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
       ),
       body: ListView(
         children: <Widget>[
           ListTile(
-            title: Text('ORDER RECEIVED'),
+            title: const Text('ORDER RECEIVED'),
             subtitle: Text(orderData['dateReceived']),
             trailing: Text(orderData['orderStatus']),
           ),
           Divider(),
           ListTile(
-            title: Text('ORDER ID'),
+            title: const Text('ORDER ID'),
             subtitle: Text(orderData['orderId']),
           ),
           ListTile(
-            title: Text('TAG ID'),
+            title: const Text('TAG ID'),
             subtitle: Text(orderData['tagId']),
           ),
           ListTile(
-            title: Text('USER ID'),
+            title: const Text('USER ID'),
             subtitle: Text(orderData['userId']),
           ),
           ListTile(
-            title: Text('SERVICE TYPE'),
+            title: const Text('SERVICE TYPE'),
             subtitle: Text(orderData['serviceType']),
           ),
           ListTile(
-            title: Text('PAYMENT PRICE'),
+            title: const Text('PAYMENT PRICE'),
             subtitle: Text('${orderData['paymentPrice']}'),
           ),
           Divider(),
           ListTile(
-            title: Text('RECEIVING DETAILS'),
+            title: const Text('RECEIVING DETAILS'),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('DATE / TIME'),
+                const Text('DATE / TIME'),
                 Text(orderData['receivingDateTime']),
-                SizedBox(height: 10),
-                Text('RIDER ID'),
+                const SizedBox(height: 10),
+                const Text('RIDER ID'),
                 Text(orderData['riderId']),
-                SizedBox(height: 10),
-                Text('RECEIVED BY'),
+                const SizedBox(height: 10),
+                const Text('RECEIVED BY'),
                 Text(orderData['receivedBy']),
               ],
             ),
