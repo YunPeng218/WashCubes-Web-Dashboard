@@ -1,17 +1,78 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
 import 'package:washcubes_admindashboard/src/features/operator/screens/input_tag/tag_input_popup.dart';
 import 'package:washcubes_admindashboard/src/features/operator/screens/order_detail/order_detail_popup.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:washcubes_admindashboard/config.dart';
+import 'package:washcubes_admindashboard/src/models/order.dart';
+import 'package:washcubes_admindashboard/src/models/service.dart';
+import 'package:washcubes_admindashboard/src/features/operator/screens/order_detail/pending_order.dart';
 
 class OrderTable extends StatefulWidget {
   const OrderTable({super.key});
 
   @override
-  State<OrderTable> createState() => _OrderTableState();
+  State<OrderTable> createState() => OrderTableState();
 }
 
-class _OrderTableState extends State<OrderTable> {
+class OrderTableState extends State<OrderTable> {
+  List<Order> orders = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchOrders();
+  }
+
+  Future<void> fetchOrders() async {
+    try {
+      final response = await http.get(
+        Uri.parse('${url}orders/operator'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        //print(response.body)
+        final Map<String, dynamic> data = json.decode(response.body);
+        //print(data);
+        if (data.containsKey('orders')) {
+          final List<dynamic> orderData = data['orders'];
+          final List<Order> fetchedOrders =
+              orderData.map((order) => Order.fromJson(order)).toList();
+          print(fetchedOrders);
+          setState(() {
+            orders = fetchedOrders;
+          });
+        } else {
+          print('Response data does not contain services.');
+        }
+      } else {
+        print('Error: ${response.statusCode}');
+        print('Error message: ${response.body}');
+      }
+    } catch (error) {
+      print('Error Fetching Orders: $error');
+    }
+  }
+
+  void viewOrder(Order order, String serviceName) {
+    // showDialog(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return OrderDetails(
+    //       order: order,
+    //       serviceName: serviceName,
+    //     );
+    //   },
+    // );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -32,8 +93,12 @@ class _OrderTableState extends State<OrderTable> {
                   IconButton(
                     onPressed: () {
                       //TODO: Refresh List Action
-                    }, 
-                    icon: const Icon(Icons.refresh_rounded, color: AppColors.cBlackColor,),)
+                    },
+                    icon: const Icon(
+                      Icons.refresh_rounded,
+                      color: AppColors.cBlackColor,
+                    ),
+                  )
                 ],
               ),
               ElevatedButton(
@@ -71,8 +136,10 @@ class _OrderTableState extends State<OrderTable> {
             ),
           ),
         ),
-        const Flexible(
-          child: OrderList(),
+        Flexible(
+          child: OrderList(
+            orders: orders,
+          ),
         ),
       ],
     );
@@ -80,97 +147,144 @@ class _OrderTableState extends State<OrderTable> {
 }
 
 class OrderList extends StatelessWidget {
-  const OrderList({super.key});
+  List<Order> orders = [];
+
+  OrderList({super.key, required this.orders});
+
+  Future<String> getServiceName(String serviceId) async {
+    String serviceName = 'Loading...';
+    try {
+      final response = await http.get(Uri.parse('${url}services/$serviceId'),
+          headers: {'Content-Type': 'application/json'});
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        if (data.containsKey('service')) {
+          final dynamic serviceData = data['service'];
+          final Service service = Service.fromJson(serviceData);
+          serviceName = service.name;
+        }
+      }
+    } catch (error) {
+      print('Error Fetching Service Name: $error');
+    }
+    return serviceName;
+  }
 
   @override
   Widget build(BuildContext context) {
     // Accessing device-specific information
     final screenWidth = MediaQuery.of(context).size.width;
 
-    //TODO: Replace with actual order data
-    final List<Order> orders = [
-      Order(
-        id: 101,
-        dateTime: '2024-03-06 10:00 AM',
-        tagId: 'A123',
-        userId: 'user123',
-        serviceType: 'Dry Cleaning',
-        status: 'Pending',
-      ),
-      Order(
-        id: 102,
-        dateTime: '2024-03-06 10:00 AM',
-        tagId: 'A123',
-        userId: 'user123',
-        serviceType: 'Dry Cleaning',
-        status: 'Process',
-      ),
-      Order(
-        id: 103,
-        dateTime: '2024-03-06 10:00 AM',
-        tagId: 'A123',
-        userId: 'user123',
-        serviceType: 'Dry Cleaning',
-        status: 'Error',
-      ),
-      Order(
-        id: 104,
-        dateTime: '2024-03-06 10:00 AM',
-        tagId: 'A123',
-        userId: 'user123',
-        serviceType: 'Dry Cleaning',
-        status: 'Ready',
-      ),
-      Order(
-        id: 105,
-        dateTime: '2024-03-06 10:00 AM',
-        tagId: 'A123',
-        userId: 'user123',
-        serviceType: 'Dry Cleaning',
-        status: 'Returned',
-      ),
-    ];
-
     return Column(
       children: [
         DataTable(
           columnSpacing: screenWidth * 0.07,
           columns: [
-            DataColumn(label: Text('ID', style: CTextTheme.greyTextTheme.headlineMedium,)),
-            DataColumn(label: Text('Date/Time', style: CTextTheme.greyTextTheme.headlineMedium,)),
-            DataColumn(label: Text('Tag ID', style: CTextTheme.greyTextTheme.headlineMedium,)),
-            DataColumn(label: Text('User ID', style: CTextTheme.greyTextTheme.headlineMedium,)),
-            DataColumn(label: Text('Service Type', style: CTextTheme.greyTextTheme.headlineMedium,)),
-            DataColumn(label: Text('Status', style: CTextTheme.greyTextTheme.headlineMedium,)),
-            DataColumn(label: Text('')),
+            DataColumn(
+                label: Text(
+              'ID',
+              style: CTextTheme.greyTextTheme.headlineMedium,
+            )),
+            DataColumn(
+                label: Text(
+              'Date/Time',
+              style: CTextTheme.greyTextTheme.headlineMedium,
+            )),
+            DataColumn(
+                label: Text(
+              'Tag ID',
+              style: CTextTheme.greyTextTheme.headlineMedium,
+            )),
+            DataColumn(
+                label: Text(
+              'User ID',
+              style: CTextTheme.greyTextTheme.headlineMedium,
+            )),
+            DataColumn(
+                label: Text(
+              'Service Type',
+              style: CTextTheme.greyTextTheme.headlineMedium,
+            )),
+            DataColumn(
+                label: Text(
+              'Status',
+              style: CTextTheme.greyTextTheme.headlineMedium,
+            )),
+            const DataColumn(label: Text('')),
           ],
           rows: orders
               .map(
                 (order) => DataRow(cells: [
-              DataCell(Text(order.id.toString(), style: CTextTheme.blackTextTheme.headlineMedium,)),
-              DataCell(Text(order.dateTime, style: CTextTheme.blackTextTheme.headlineMedium,)),
-              DataCell(SizedBox(width: 80, child: Text(order.tagId, style: CTextTheme.blackTextTheme.headlineMedium,))),
-              DataCell(SizedBox(width: 80, child: Text(order.userId, style: CTextTheme.blackTextTheme.headlineMedium,))),
-              DataCell(SizedBox(width: 100, child: Text(order.serviceType, style: CTextTheme.blackTextTheme.headlineMedium,))),
-              DataCell(
-                Text(
-                  order.status,
-                  style:  CTextTheme.blackTextTheme.headlineMedium?.copyWith(color: _getStatusColor(order.status)),
-                ),
-              ),
-              DataCell(
-                ElevatedButton(
-                  onPressed: () {
-                    checkOrderAction(order, context);
-                  },
-                  child: Text(
-                    'Check',
-                    style:  CTextTheme.blackTextTheme.headlineMedium,
+                  DataCell(Text(
+                    order.orderNumber,
+                    style: CTextTheme.blackTextTheme.headlineMedium,
+                  )),
+                  DataCell(Text(
+                    order.getFormattedDateTime(order.createdAt),
+                    style: CTextTheme.blackTextTheme.headlineMedium,
+                  )),
+                  DataCell(SizedBox(
+                      width: 80,
+                      child: Text(
+                        order.barcodeID,
+                        style: CTextTheme.blackTextTheme.headlineMedium,
+                      ))),
+                  DataCell(SizedBox(
+                      width: 80,
+                      child: Text(
+                        order.user?.phoneNumber.toString() ?? 'Loading...',
+                        style: CTextTheme.blackTextTheme.headlineMedium,
+                      ))),
+                  DataCell(SizedBox(
+                    width: 100,
+                    child: FutureBuilder<String>(
+                      future: getServiceName(order.serviceId),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Text('Loading...');
+                        } else if (snapshot.hasError) {
+                          return const Text('Error');
+                        } else {
+                          return Text(
+                            snapshot.data ?? 'Service Name Not Available',
+                            style: CTextTheme.blackTextTheme.headlineMedium,
+                          );
+                        }
+                      },
+                    ),
+                  )),
+                  DataCell(
+                    Text(
+                      order.orderStage?.processingComplete.status == true
+                          ? 'Ready'
+                          : order.orderStage?.getInProgressStatus() ??
+                              'Loading...',
+                      style: CTextTheme.blackTextTheme.headlineMedium?.copyWith(
+                          color: _getStatusColor(
+                              order.orderStage?.processingComplete.status ==
+                                      true
+                                  ? 'Ready'
+                                  : order.orderStage?.getInProgressStatus() ??
+                                      'Loading...')),
+                    ),
                   ),
-                ),
-              ),
-            ]),
-          )
+                  DataCell(
+                    ElevatedButton(
+                      onPressed: () async {
+                        String serviceName =
+                            await getServiceName(order.serviceId);
+                        checkOrderAction(order, serviceName, context);
+                      },
+                      child: Text(
+                        'Check',
+                        style: CTextTheme.blackTextTheme.headlineMedium,
+                      ),
+                    ),
+                  ),
+                ]),
+              )
               .toList(),
         ),
         const Spacer(),
@@ -195,7 +309,7 @@ class OrderList extends StatelessWidget {
               const SizedBox(width: 16), // Adjust spacing as needed
               Text(
                 'Page 1 of 5', // Replace with actual page number
-                style:  CTextTheme.blackTextTheme.headlineMedium,
+                style: CTextTheme.blackTextTheme.headlineMedium,
               ),
               const SizedBox(width: 16), // Adjust spacing as needed
               IconButton(
@@ -217,29 +331,34 @@ class OrderList extends StatelessWidget {
     );
   }
 
-  void checkOrderAction(Order order, BuildContext context) {
-    switch (order.status) {
+  void checkOrderAction(Order order, String serviceName, BuildContext context) {
+    final inProgressStatus = order.orderStage?.getInProgressStatus();
+
+    switch (inProgressStatus) {
       case 'Pending':
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return const OrderDetailPopUp(orderStatus: 'Pending');
+            return PendingOrder(
+              order: order,
+              serviceName: serviceName,
+            );
           },
         );
         break;
-      case 'Process':
+      case 'Processing':
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return const OrderDetailPopUp(orderStatus: 'Process');
+            return const OrderDetailPopUp(orderStatus: 'Processing');
           },
         );
         break;
-      case 'Error':
+      case 'Order Error':
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return const OrderDetailPopUp(orderStatus: 'Error');
+            return const OrderDetailPopUp(orderStatus: 'Order Error');
           },
         );
         break;
@@ -268,9 +387,9 @@ class OrderList extends StatelessWidget {
     switch (status) {
       case 'Pending':
         return Colors.grey;
-      case 'Process':
+      case 'Processing':
         return Colors.orange;
-      case 'Error':
+      case 'Order Error':
         return Colors.red;
       case 'Ready':
         return Colors.green;
@@ -282,7 +401,7 @@ class OrderList extends StatelessWidget {
   }
 }
 
-class Order {
+class OrderRow {
   final int id;
   final String dateTime;
   final String tagId;
@@ -290,7 +409,7 @@ class Order {
   final String serviceType;
   final String status;
 
-  Order({
+  OrderRow({
     required this.id,
     required this.dateTime,
     required this.tagId,
