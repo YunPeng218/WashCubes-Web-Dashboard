@@ -279,7 +279,7 @@ class _OrderDetailPopUpState extends State<OrderDetailPopUp> {
                               'STATUS',
                               style: CTextTheme.greyTextTheme.headlineMedium,
                             ),
-                            title: orderStatus == 'Error'
+                            title: orderStatus == 'Order Error'
                                 ? Text(
                                     'Verification Error',
                                     style:
@@ -308,7 +308,7 @@ class _OrderDetailPopUpState extends State<OrderDetailPopUp> {
                           ),
                           title: Text(
                             'RM 20.00',
-                            style: orderStatus == 'Error'
+                            style: orderStatus == 'Order Error'
                                 ? CTextTheme.redTextTheme.headlineMedium
                                 : CTextTheme.blackTextTheme.headlineMedium,
                           ),
@@ -361,7 +361,7 @@ class _OrderDetailPopUpState extends State<OrderDetailPopUp> {
                                       context: context,
                                       builder: (BuildContext context) {
                                         return const OrderDetailPopUp(
-                                          orderStatus: 'Process',
+                                          orderStatus: 'Processing',
                                         ); // Proceed to Process Stage
                                       },
                                     );
@@ -372,7 +372,7 @@ class _OrderDetailPopUpState extends State<OrderDetailPopUp> {
                                   style:
                                       CTextTheme.blackTextTheme.headlineMedium,
                                 ))
-                            : orderStatus == 'Process'
+                            : orderStatus == 'Processing'
                                 // Complete Process Button
                                 ? ElevatedButton(
                                     onPressed: () async {
@@ -478,7 +478,7 @@ class _OrderDetailPopUpState extends State<OrderDetailPopUp> {
                                           context: context,
                                           builder: (BuildContext context) {
                                             return const OrderDetailPopUp(
-                                              orderStatus: 'Process',
+                                              orderStatus: 'Processing',
                                             ); // Proceed to Process Stage
                                           },
                                         );

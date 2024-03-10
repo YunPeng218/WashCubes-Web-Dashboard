@@ -1,7 +1,4 @@
-2024/03/10-20:54:51.231 4914 Reusing MANIFEST C:\Users\ivant\AppData\Local\Temp\flutter_tools.64b598c8\flutter_tools_chrome_device.a41cb31f\Default\Site Characteristics Database/MANIFEST-000001
-2024/03/10-20:54:51.232 4914 Recovering log #3
-2024/03/10-20:54:51.232 4914 Level-0 table #6: started
-2024/03/10-20:54:51.235 4914 Level-0 table #6: 356 bytes OK
-2024/03/10-20:54:51.235 4914 Recovering log #6
-2024/03/10-20:54:51.235 4914 Reusing old log C:\Users\ivant\AppData\Local\Temp\flutter_tools.64b598c8\flutter_tools_chrome_device.a41cb31f\Default\Site Characteristics Database/000006.log 
-2024/03/10-20:54:51.237 4914 Delete type=0 #3
+2024/03/10-21:41:30.483 1f1c Reusing MANIFEST C:\Users\ivant\AppData\Local\Temp\flutter_tools.2a3eb51f\flutter_tools_chrome_device.12dffeb1\Default\Site Characteristics Database/MANIFEST-000001
+2024/03/10-21:41:30.484 1f1c Recovering log #6
+2024/03/10-21:41:30.484 1f1c Reusing old log C:\Users\ivant\AppData\Local\Temp\flutter_tools.2a3eb51f\flutter_tools_chrome_device.12dffeb1\Default\Site Characteristics Database/000006.log 
+2024/03/10-21:41:30.484 1f1c Delete type=0 #3
