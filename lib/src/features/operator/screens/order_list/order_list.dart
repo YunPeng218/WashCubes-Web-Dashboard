@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
-import 'package:washcubes_admindashboard/src/features/operator/screens/input_tag/tag_input_popup.dart';
+//import 'package:washcubes_admindashboard/src/features/operator/screens/input_tag/tag_input_popup.dart';
 import 'package:washcubes_admindashboard/src/features/operator/screens/order_detail/order_detail_popup.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 import 'dart:convert';
@@ -11,6 +11,8 @@ import 'package:washcubes_admindashboard/config.dart';
 import 'package:washcubes_admindashboard/src/models/order.dart';
 import 'package:washcubes_admindashboard/src/models/service.dart';
 import 'package:washcubes_admindashboard/src/features/operator/screens/order_detail/pending_order.dart';
+import 'package:washcubes_admindashboard/src/features/operator/screens/order_detail/process_order.dart';
+import 'package:washcubes_admindashboard/src/features/operator/screens/order_detail/ready_order.dart';
 
 class OrderTable extends StatefulWidget {
   const OrderTable({super.key});
@@ -82,7 +84,7 @@ class OrderTableState extends State<OrderTable> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Row(
                 children: [
@@ -91,8 +93,9 @@ class OrderTableState extends State<OrderTable> {
                     style: CTextTheme.blackTextTheme.displayLarge,
                   ),
                   IconButton(
-                    onPressed: () {
-                      //TODO: Refresh List Action
+                    onPressed: () async {
+                      await fetchOrders();
+                      setState(() {});
                     },
                     icon: const Icon(
                       Icons.refresh_rounded,
@@ -101,20 +104,20 @@ class OrderTableState extends State<OrderTable> {
                   )
                 ],
               ),
-              ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return const InputTagPopUp();
-                    },
-                  );
-                },
-                child: Text(
-                  'Scan Tag',
-                  style: CTextTheme.blackTextTheme.headlineMedium,
-                ),
-              ),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     showDialog(
+              //       context: context,
+              //       builder: (BuildContext context) {
+              //         return const InputTagPopUp();
+              //       },
+              //     );
+              //   },
+              //   child: Text(
+              //     'Scan Tag',
+              //     style: CTextTheme.blackTextTheme.headlineMedium,
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -169,6 +172,37 @@ class OrderList extends StatelessWidget {
       print('Error Fetching Service Name: $error');
     }
     return serviceName;
+  }
+
+  Future<List<String>> getReceiverDetails(String orderId) async {
+    List<String> receiverDetails = [];
+    try {
+      final response = await http.get(
+        Uri.parse('${url}jobs/receiver-details?orderId=$orderId'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        if (data.containsKey('receiverName') &&
+            data.containsKey('receiverIC')) {
+          final String nameData = data['receiverName'];
+          receiverDetails.add(nameData);
+          final String icData = data['receiverIC'];
+          receiverDetails.add(icData);
+        } else {
+          print('Response data does not contain services.');
+        }
+      } else {
+        print('Error: ${response.statusCode}');
+        print('Error message: ${response.body}');
+      }
+    } catch (error) {
+      print('Error Fetching Orders: $error');
+    }
+    return receiverDetails;
   }
 
   @override
@@ -275,7 +309,10 @@ class OrderList extends StatelessWidget {
                       onPressed: () async {
                         String serviceName =
                             await getServiceName(order.serviceId);
-                        checkOrderAction(order, serviceName, context);
+                        List<String> receiverDetails =
+                            await getReceiverDetails(order.id);
+                        checkOrderAction(
+                            order, serviceName, receiverDetails, context);
                       },
                       child: Text(
                         'Check',
@@ -331,7 +368,8 @@ class OrderList extends StatelessWidget {
     );
   }
 
-  void checkOrderAction(Order order, String serviceName, BuildContext context) {
+  void checkOrderAction(Order order, String serviceName,
+      List<String> receiverDetails, BuildContext context) {
     final inProgressStatus = order.orderStage?.getInProgressStatus();
 
     switch (inProgressStatus) {
@@ -342,6 +380,7 @@ class OrderList extends StatelessWidget {
             return PendingOrder(
               order: order,
               serviceName: serviceName,
+              receiverDetails: receiverDetails,
             );
           },
         );
@@ -350,7 +389,11 @@ class OrderList extends StatelessWidget {
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return const OrderDetailPopUp(orderStatus: 'Processing');
+            return ProcessOrder(
+              order: order,
+              serviceName: serviceName,
+              receiverDetails: receiverDetails,
+            );
           },
         );
         break;
@@ -366,7 +409,11 @@ class OrderList extends StatelessWidget {
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return const OrderDetailPopUp(orderStatus: 'Ready');
+            return ReadyOrder(
+              order: order,
+              serviceName: serviceName,
+              receiverDetails: receiverDetails,
+            );
           },
         );
         break;

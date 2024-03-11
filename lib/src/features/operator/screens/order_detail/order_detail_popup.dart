@@ -550,10 +550,10 @@ class _OrderDetailPopUpState extends State<OrderDetailPopUp> {
                     ],
                   ),
                   const Divider(),
-                  OrderItemList(
-                    isEditing: isEditing,
-                    itemDetails: itemDetails,
-                  ),
+                  // OrderItemList(
+                  //   isEditing: isEditing,
+                  //   itemDetails: itemDetails,
+                  // ),
                   // Add item button
                   isEditing
                       ? ListTile(

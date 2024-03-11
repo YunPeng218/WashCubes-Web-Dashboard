@@ -1,51 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
+import 'package:washcubes_admindashboard/src/models/order.dart';
+import 'package:washcubes_admindashboard/src/models/service.dart';
 
 class OrderItemList extends StatefulWidget {
-  final List<Map<String, dynamic>> itemDetails;
+  final List<OrderItem> orderItems;
+  final Service service;
   final bool isEditing;
 
   const OrderItemList({
-    required this.itemDetails,
+    required this.orderItems,
+    required this.service,
     required this.isEditing,
     super.key,
   });
 
   @override
-  _OrderItemListState createState() => _OrderItemListState();
+  OrderItemListState createState() => OrderItemListState();
 }
 
-class _OrderItemListState extends State<OrderItemList> {
-  
-  //Get price according to item name
-  double getPrice(String itemName) {
-    switch (itemName) {
-      case 'Top':
-        return 2.00;
-      case 'Bottom':
-        return 2.00;
-      case 'Baju Kurung':
-        return 4.00;
-      case 'Curtain':
-        return 5.00;
-      case 'Bedsheet':
-        return 6.00;
-      case 'Quilt / Comforter':
-        return 6.00;
-      default:
-        return 0.0; // Default price
-    }
-  }
+class OrderItemListState extends State<OrderItemList> {
+  // void initState() {
+  //   super.initState();
+  //   orderItems = widget.order?.orderItems ?? [];
+  //   getServiceDetails();
+  //   getFinalPrice();
+  // }
+
+  void addExistingOrderItems() {}
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: widget.itemDetails.length,
+      itemCount: widget.orderItems.length,
       itemBuilder: (context, index) {
-        final item = widget.itemDetails[index];
-        int total = item['quantity'] * getPrice(item['item']);
+        final item = widget.orderItems[index];
         return Column(
           children: [
             Row(
@@ -55,11 +46,11 @@ class _OrderItemListState extends State<OrderItemList> {
                       ? DropdownButton<String>(
                           isExpanded: true,
                           alignment: Alignment.center,
-                          value: item['item'],
+                          value: item.name,
                           onChanged: (newValue) {
-                            setState(() {
-                              widget.itemDetails[index]['item'] = newValue!;
-                            });
+                            // setState(() {
+                            //   widget.itemDetails[index]['item'] = newValue!;
+                            // });
                           },
                           items: <String>[
                             'Top',
@@ -75,7 +66,8 @@ class _OrderItemListState extends State<OrderItemList> {
                                 value: value,
                                 child: Text(
                                   value,
-                                  style: CTextTheme.blackTextTheme.headlineMedium,
+                                  style:
+                                      CTextTheme.blackTextTheme.headlineMedium,
                                   textAlign: TextAlign.center,
                                 ),
                               );
@@ -83,14 +75,14 @@ class _OrderItemListState extends State<OrderItemList> {
                           ).toList(),
                         )
                       : Text(
-                          item['item'],
+                          item.name,
                           style: CTextTheme.blackTextTheme.headlineMedium,
                           textAlign: TextAlign.center,
                         ),
                 ),
                 Expanded(
                   child: Text(
-                    getPrice(item['item']).toString(),
+                    'RM${item.price}/${item.unit}',
                     style: CTextTheme.blackTextTheme.headlineMedium,
                     textAlign: TextAlign.center,
                   ),
@@ -101,24 +93,26 @@ class _OrderItemListState extends State<OrderItemList> {
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
                           ], // Allow only numeric input
-                          keyboardType: TextInputType.number, // Set keyboard type to number
-                          controller: TextEditingController(text: item['quantity'].toString()),
+                          keyboardType: TextInputType
+                              .number, // Set keyboard type to number
+                          controller: TextEditingController(
+                              text: item.quantity.toString()),
                           textAlign: TextAlign.center,
                           onChanged: (newValue) {
-                            setState(() {
-                              widget.itemDetails[index]['quantity'] = int.tryParse(newValue) ?? 0;
-                            });
+                            // setState(() {
+                            //   widget.itemDetails[index]['quantity'] = int.tryParse(newValue) ?? 0;
+                            // });
                           },
                         )
                       : Text(
-                          item['quantity'].toString(),
+                          item.quantity.toString(),
                           style: CTextTheme.blackTextTheme.headlineMedium,
                           textAlign: TextAlign.center,
                         ),
                 ),
                 Expanded(
                   child: Text(
-                    total.toString(),
+                    'RM${item.cumPrice.toStringAsFixed(2)}',
                     style: CTextTheme.blackTextTheme.headlineMedium,
                     textAlign: TextAlign.center,
                   ),
@@ -127,7 +121,8 @@ class _OrderItemListState extends State<OrderItemList> {
                 widget.isEditing
                     ? IconButton(
                         onPressed: () {},
-                        icon: const Icon(Icons.delete_outline_rounded, color: Colors.red),
+                        icon: const Icon(Icons.delete_outline_rounded,
+                            color: Colors.red),
                       )
                     : const SizedBox(),
               ],
