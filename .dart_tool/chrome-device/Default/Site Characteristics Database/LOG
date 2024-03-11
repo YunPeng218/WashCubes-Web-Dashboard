@@ -1,2 +1,9 @@
-2024/03/11-11:53:50.394 5bf8 Creating DB C:\Users\ivant\AppData\Local\Temp\flutter_tools.a956b655\flutter_tools_chrome_device.18f3c51a\Default\Site Characteristics Database since it was missing.
-2024/03/11-11:53:50.410 5bf8 Reusing MANIFEST C:\Users\ivant\AppData\Local\Temp\flutter_tools.a956b655\flutter_tools_chrome_device.18f3c51a\Default\Site Characteristics Database/MANIFEST-000001
+2024/03/12-02:35:33.146 3854 Reusing MANIFEST C:\Users\YunPeng\AppData\Local\Temp\flutter_tools.c780c407\flutter_tools_chrome_device.56b096e9\Default\Site Characteristics Database/MANIFEST-000001
+2024/03/12-02:35:33.147 4360 Compacting 4@0 + 0@1 files
+2024/03/12-02:35:33.151 4360 Generated table #11@0: 2 keys, 197 bytes
+2024/03/12-02:35:33.152 4360 Compacted 4@0 + 0@1 files => 197 bytes
+2024/03/12-02:35:33.154 4360 compacted to: files[ 0 1 0 0 0 0 0 ]
+2024/03/12-02:35:33.155 4360 Delete type=2 #4
+2024/03/12-02:35:33.155 4360 Delete type=2 #6
+2024/03/12-02:35:33.155 4360 Delete type=2 #7
+2024/03/12-02:35:33.155 4360 Delete type=2 #8

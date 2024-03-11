@@ -366,7 +366,7 @@ class OrderErrorStatus {
       'status': status,
       'dateUpdated': dateUpdated?.toIso8601String(),
       'proofPicUrls': proofPicUrl,
-      'userejected': userRejected,
+      'userRejected': userRejected,
     };
   }
 }

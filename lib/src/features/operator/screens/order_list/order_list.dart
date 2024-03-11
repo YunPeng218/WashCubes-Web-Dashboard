@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
+import 'package:washcubes_admindashboard/src/features/operator/screens/order_detail/error_order.dart';
 //import 'package:washcubes_admindashboard/src/features/operator/screens/input_tag/tag_input_popup.dart';
 import 'package:washcubes_admindashboard/src/features/operator/screens/order_detail/order_detail_popup.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
@@ -401,7 +402,23 @@ class OrderList extends StatelessWidget {
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return const OrderDetailPopUp(orderStatus: 'Order Error');
+            return OrderError(
+              order: order,
+              serviceName: serviceName,
+              receiverDetails: receiverDetails,
+            );
+          },
+        );
+        break;
+      case 'Pending Return Approval':
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return OrderError(
+              order: order,
+              serviceName: serviceName,
+              receiverDetails: receiverDetails,
+            );
           },
         );
         break;
