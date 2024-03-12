@@ -277,10 +277,10 @@ class OrderStage {
     if (orderError.status) {
       return 'Order Error';
     }
-    if (!inProgress.verified.status) {
+    if (!inProgress.verified) {
       return 'Pending';
     }
-    if (inProgress.verified.status && inProgress.processing.status) {
+    if (inProgress.verified && inProgress.processing) {
       return 'Processing';
     }
     return 'Unusual Status';
@@ -316,8 +316,8 @@ class OrderStatus {
 class OrderInProgressStatus {
   bool status;
   DateTime? dateUpdated;
-  OrderStatus verified;
-  OrderStatus processing;
+  bool verified;
+  bool processing;
 
   OrderInProgressStatus({
     required this.status,
@@ -328,12 +328,13 @@ class OrderInProgressStatus {
 
   factory OrderInProgressStatus.fromJson(Map<String, dynamic> json) {
     return OrderInProgressStatus(
-        status: json['status'] ?? false,
-        dateUpdated: json['dateUpdated'] != null
-            ? DateTime.parse(json['dateUpdated'])
-            : null,
-        verified: OrderStatus.fromJson(json['verified'] ?? {}),
-        processing: OrderStatus.fromJson(json['processing'] ?? {}));
+      status: json['status'] ?? false,
+      dateUpdated: json['dateUpdated'] != null
+          ? DateTime.parse(json['dateUpdated'])
+          : null,
+      verified: json['verified'] ?? false,
+      processing: json['processing'] ?? false,
+    );
   }
 }
 
@@ -342,12 +343,14 @@ class OrderErrorStatus {
   DateTime? dateUpdated;
   List<String> proofPicUrl;
   bool userRejected;
+  bool userAccepted;
 
   OrderErrorStatus({
     required this.status,
     this.dateUpdated,
     required this.proofPicUrl,
     required this.userRejected,
+    required this.userAccepted,
   });
 
   factory OrderErrorStatus.fromJson(Map<String, dynamic> json) {
@@ -358,6 +361,7 @@ class OrderErrorStatus {
           : null,
       proofPicUrl: List<String>.from(json['proofPicUrl'] ?? []),
       userRejected: json['userRejected'] ?? false,
+      userAccepted: json['userAccepted'] ?? false,
     );
   }
 
@@ -367,6 +371,7 @@ class OrderErrorStatus {
       'dateUpdated': dateUpdated?.toIso8601String(),
       'proofPicUrls': proofPicUrl,
       'userRejected': userRejected,
+      'userAccepted': userAccepted,
     };
   }
 }
