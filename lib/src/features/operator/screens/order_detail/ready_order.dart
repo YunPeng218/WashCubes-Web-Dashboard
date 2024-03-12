@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:washcubes_admindashboard/src/models/order.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 
@@ -19,6 +20,19 @@ class ReadyOrder extends StatefulWidget {
 }
 
 class ReadyOrderState extends State<ReadyOrder> {
+
+  String getFormattedDateTime(String? dateString) {
+    if (dateString == null) {
+      return 'Loading...';
+    }
+    DateTime dateTime = DateTime.parse(dateString);
+    const timeZoneOffset = Duration(hours: 8);
+    dateTime = dateTime.add(timeZoneOffset);
+    String formattedDate = DateFormat('dd MMM yyyy').format(dateTime);
+    String formattedTime = DateFormat('HH:mm').format(dateTime);
+    return '$formattedDate, $formattedTime';
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -56,11 +70,11 @@ class ReadyOrderState extends State<ReadyOrder> {
                       children: [
                         ListTile(
                           leading: Text(
-                            'ORDER RECEIVED:',
+                            'ORDER CREATED:',
                             style: CTextTheme.greyTextTheme.headlineMedium,
                           ),
                           title: Text(
-                            '${widget.order?.orderStage?.inProgress.dateUpdated ?? 'Loading...'}',
+                            getFormattedDateTime(widget.order?.createdAt.toString()),
                             style: CTextTheme.blackTextTheme.headlineMedium,
                           ),
                         ),
@@ -128,7 +142,7 @@ class ReadyOrderState extends State<ReadyOrder> {
                             style: CTextTheme.greyTextTheme.headlineMedium,
                           ),
                           title: Text(
-                            '${widget.order?.orderStage?.inProgress.dateUpdated ?? 'Loading...'}',
+                            getFormattedDateTime(widget.order?.orderStage?.inProgress.dateUpdated?.toString()),
                             style: CTextTheme.blackTextTheme.headlineMedium,
                           ),
                         ),
@@ -165,7 +179,6 @@ class ReadyOrderState extends State<ReadyOrder> {
               ),
               const Divider(),
               //Verification Row
-//Verification Row
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -191,13 +204,18 @@ class ReadyOrderState extends State<ReadyOrder> {
                         ),
                         ListTile(
                           leading: Text(
-                            'FINAL PRICE',
+                            'PRICE',
                             style: CTextTheme.greyTextTheme.headlineMedium,
                           ),
-                          title: Text(
-                            'RM${widget.order!.finalPrice?.toStringAsFixed(2)}',
-                            style: CTextTheme.blackTextTheme.headlineMedium,
-                          ),
+                          title: widget.order!.orderStage!.orderError.status
+                            ? Text(
+                                'RM${widget.order!.estimatedPrice.toStringAsFixed(2)}',
+                                style: CTextTheme.blackTextTheme.headlineMedium,
+                              )
+                            : Text(
+                                'RM${widget.order!.finalPrice?.toStringAsFixed(2)}',
+                                style: CTextTheme.blackTextTheme.headlineMedium,
+                              ),
                         ),
                       ],
                     ),
@@ -239,54 +257,103 @@ class ReadyOrderState extends State<ReadyOrder> {
                   ),
                   const Divider(),
                   // Order Item List
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: widget.order!.orderItems.length,
-                    itemBuilder: (context, index) {
-                      final item = widget.order!.orderItems[index];
-                      return Column(
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  item.name,
-                                  style:
-                                      CTextTheme.blackTextTheme.headlineMedium,
-                                  textAlign: TextAlign.center,
+                  widget.order!.orderStage!.orderError.status == true
+                  ?  ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: widget.order!.oldOrderItems.length,
+                      itemBuilder: (context, index) {
+                        final item = widget.order!.oldOrderItems[index];
+                        return Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    item.name,
+                                    style:
+                                        CTextTheme.blackTextTheme.headlineMedium,
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  'RM${item.price.toStringAsFixed(2)}/${item.unit}',
-                                  style:
-                                      CTextTheme.blackTextTheme.headlineMedium,
-                                  textAlign: TextAlign.center,
+                                Expanded(
+                                  child: Text(
+                                    'RM${item.price.toStringAsFixed(2)}/${item.unit}',
+                                    style:
+                                        CTextTheme.blackTextTheme.headlineMedium,
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  item.quantity.toString(),
-                                  style:
-                                      CTextTheme.blackTextTheme.headlineMedium,
-                                  textAlign: TextAlign.center,
+                                Expanded(
+                                  child: Text(
+                                    item.quantity.toString(),
+                                    style:
+                                        CTextTheme.blackTextTheme.headlineMedium,
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  'RM${item.cumPrice.toStringAsFixed(2)}',
-                                  style:
-                                      CTextTheme.blackTextTheme.headlineMedium,
-                                  textAlign: TextAlign.center,
+                                Expanded(
+                                  child: Text(
+                                    'RM${item.cumPrice.toStringAsFixed(2)}',
+                                    style:
+                                        CTextTheme.blackTextTheme.headlineMedium,
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const Divider(),
-                        ],
-                      );
-                    },
-                  ),
+                              ],
+                            ),
+                            const Divider(),
+                          ],
+                        );
+                      },
+                    )
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: widget.order!.orderItems.length,
+                      itemBuilder: (context, index) {
+                        final item = widget.order!.orderItems[index];
+                        return Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    item.name,
+                                    style:
+                                        CTextTheme.blackTextTheme.headlineMedium,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    'RM${item.price.toStringAsFixed(2)}/${item.unit}',
+                                    style:
+                                        CTextTheme.blackTextTheme.headlineMedium,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    item.quantity.toString(),
+                                    style:
+                                        CTextTheme.blackTextTheme.headlineMedium,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    'RM${item.cumPrice.toStringAsFixed(2)}',
+                                    style:
+                                        CTextTheme.blackTextTheme.headlineMedium,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Divider(),
+                          ],
+                        );
+                      },
+                    )
                 ],
               ),
             ],

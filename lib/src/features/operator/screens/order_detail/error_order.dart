@@ -3,10 +3,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:washcubes_admindashboard/config.dart';
 import 'package:washcubes_admindashboard/src/common_widgets/confirmation_popup.dart';
 import 'package:washcubes_admindashboard/src/features/operator/screens/image_proof/proof_popup.dart';
-import 'package:washcubes_admindashboard/src/features/operator/screens/order_detail/order_detail_popup.dart';
 import 'package:washcubes_admindashboard/src/models/order.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 import 'package:http/http.dart' as http;
@@ -43,11 +43,11 @@ class OrderErrorState extends State<OrderError> {
     );
   }
 
-  Future<void> confirmProcessingComplete() async {
+  Future<void> approveOrderReturn() async {
     try {
       final Map<String, dynamic> data = {'orderId': widget.order?.id};
       final response = await http.post(
-        Uri.parse('${url}orders/operator/confirm-processing-complete'),
+        Uri.parse('${url}orders/operator/approve-order-return'),
         body: json.encode(data),
         headers: {'Content-Type': 'application/json'},
       );
@@ -58,11 +58,11 @@ class OrderErrorState extends State<OrderError> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text(
-                'Processing Complete',
+                'Order Return Approved',
                 textAlign: TextAlign.center,
               ),
               content: Text(
-                'The order status for Order ${widget.order?.orderNumber} has been set to Processing Complete.',
+                'The order return request for Order ${widget.order?.orderNumber} has been approved.',
                 textAlign: TextAlign.center,
                 // style: CTextTheme.blackTextTheme.headlineSmall,
               ),
@@ -90,6 +90,18 @@ class OrderErrorState extends State<OrderError> {
     } catch (error) {
       print('Error approve order details: $error');
     }
+  }
+
+  String getFormattedDateTime(String? dateString) {
+    if (dateString == null) {
+      return 'Loading...';
+    }
+    DateTime dateTime = DateTime.parse(dateString);
+    const timeZoneOffset = Duration(hours: 8);
+    dateTime = dateTime.add(timeZoneOffset);
+    String formattedDate = DateFormat('dd MMM yyyy').format(dateTime);
+    String formattedTime = DateFormat('HH:mm').format(dateTime);
+    return '$formattedDate, $formattedTime';
   }
 
   @override
@@ -130,11 +142,11 @@ class OrderErrorState extends State<OrderError> {
                       children: [
                         ListTile(
                           leading: Text(
-                            'ORDER RECEIVED',
+                            'ORDER CREATED',
                             style: CTextTheme.greyTextTheme.headlineMedium,
                           ),
                           title: Text(
-                            '${widget.order?.orderStage?.inProgress.dateUpdated ?? 'Loading...'}',
+                            getFormattedDateTime(widget.order?.createdAt.toString()),
                             style: CTextTheme.blackTextTheme.headlineMedium,
                           ),
                         ),
@@ -204,7 +216,7 @@ class OrderErrorState extends State<OrderError> {
                             style: CTextTheme.greyTextTheme.headlineMedium,
                           ),
                           title: Text(
-                            '${widget.order?.orderStage?.inProgress.dateUpdated ?? 'Loading...'}',
+                            getFormattedDateTime(widget.order?.orderStage?.inProgress.dateUpdated?.toString()),
                             style: CTextTheme.blackTextTheme.headlineMedium,
                           ),
                         ),
@@ -321,7 +333,7 @@ class OrderErrorState extends State<OrderError> {
                           ),
                           title: widget.order!.orderStage!.orderError.userRejected
                               ? Text(
-                                  'Declined',
+                                  'Declined (Requested for order return)',
                                   style: CTextTheme
                                       .redTextTheme.headlineMedium,
                                 )
@@ -342,7 +354,7 @@ class OrderErrorState extends State<OrderError> {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return const ImageProof(); // Proceed to Ready Stage
+                                return ImageProof(widget.order!.orderStage!.orderError.proofPicUrl);
                               },
                             );
                           },
@@ -360,20 +372,12 @@ class OrderErrorState extends State<OrderError> {
                           onPressed: () async {
                             final result = await showConfirmationDialog(context);
                             if (result == 'Confirm') {
-                              confirmProcessingComplete();
+                              approveOrderReturn();
                               Navigator.pop(context);
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return const OrderDetailPopUp(
-                                    orderStatus: 'Returned',
-                                  );
-                                },
-                              );
                             }
                           },
                           child: Text(
-                            'Return',
+                            'Approve Return',
                             style: CTextTheme.blackTextTheme.headlineMedium,
                           ),
                         ),
@@ -468,98 +472,6 @@ class OrderErrorState extends State<OrderError> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class ImageDisplayDialog extends StatefulWidget {
-  final List<String>? imageUrls;
-
-  const ImageDisplayDialog({Key? key, this.imageUrls}) : super(key: key);
-
-  @override
-  _ImageDisplayDialogState createState() => _ImageDisplayDialogState();
-}
-
-class _ImageDisplayDialogState extends State<ImageDisplayDialog> {
-  int currentIndex = 0;
-
-  void nextImage() {
-    setState(() {
-      if (currentIndex < (widget.imageUrls?.length ?? 0) - 1) {
-        currentIndex++;
-      }
-    });
-  }
-
-  void previousImage() {
-    setState(() {
-      if (currentIndex > 0) {
-        currentIndex--;
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      child: Container(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Proof Image ${currentIndex + 1} of ${widget.imageUrls?.length}',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10.0),
-            if (widget.imageUrls != null && widget.imageUrls!.isNotEmpty)
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  SizedBox(
-                    height: 600,
-                    width: 500,
-                    child: Image.network(
-                      widget.imageUrls![currentIndex],
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back),
-                        onPressed: previousImage,
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.arrow_forward),
-                        onPressed: nextImage,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            SizedBox(height: 10.0),
-            Align(
-              alignment: Alignment.center,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                      Colors.blue[100]!)),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('Close'),
-              ),
-            ),
-          ],
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:washcubes_admindashboard/src/features/operator/screens/login/operator_login_page.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 
 class OperatorSideMenu extends StatelessWidget {
@@ -29,7 +30,13 @@ class OperatorSideMenu extends StatelessWidget {
           width: double.infinity,
           color: const Color(0xFF182738),
           child: TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const OperatorLoginPage()), 
+                (route) => false
+              );
+            },
             child: const Text(
               'Logout',
               style: TextStyle(

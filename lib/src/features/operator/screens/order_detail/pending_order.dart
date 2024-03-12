@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:washcubes_admindashboard/src/models/order.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -337,6 +338,18 @@ class PendingOrderState extends State<PendingOrder> {
     }
   }
 
+  String getFormattedDateTime(String? dateString) {
+    if (dateString == null) {
+      return 'Loading...';
+    }
+    DateTime dateTime = DateTime.parse(dateString);
+    const timeZoneOffset = Duration(hours: 8);
+    dateTime = dateTime.add(timeZoneOffset);
+    String formattedDate = DateFormat('dd MMM yyyy').format(dateTime);
+    String formattedTime = DateFormat('HH:mm').format(dateTime);
+    return '$formattedDate, $formattedTime';
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -373,11 +386,11 @@ class PendingOrderState extends State<PendingOrder> {
                       children: [
                         ListTile(
                           leading: Text(
-                            'ORDER RECEIVED:',
+                            'ORDER CREATED:',
                             style: CTextTheme.greyTextTheme.headlineMedium,
                           ),
                           title: Text(
-                            '${widget.order?.orderStage?.inProgress.dateUpdated ?? 'Loading...'}',
+                            getFormattedDateTime(widget.order?.createdAt.toString()),
                             style: CTextTheme.blackTextTheme.headlineMedium,
                           ),
                         ),
@@ -445,7 +458,7 @@ class PendingOrderState extends State<PendingOrder> {
                             style: CTextTheme.greyTextTheme.headlineMedium,
                           ),
                           title: Text(
-                            '${widget.order?.orderStage?.inProgress.dateUpdated ?? 'Loading...'}',
+                            getFormattedDateTime(widget.order?.orderStage?.inProgress.dateUpdated?.toString()),
                             style: CTextTheme.blackTextTheme.headlineMedium,
                           ),
                         ),

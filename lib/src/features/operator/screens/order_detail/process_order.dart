@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:washcubes_admindashboard/src/models/order.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -86,6 +87,18 @@ class ProcessOrderState extends State<ProcessOrder> {
     }
   }
 
+  String getFormattedDateTime(String? dateString) {
+    if (dateString == null) {
+      return 'Loading...';
+    }
+    DateTime dateTime = DateTime.parse(dateString);
+    const timeZoneOffset = Duration(hours: 8);
+    dateTime = dateTime.add(timeZoneOffset);
+    String formattedDate = DateFormat('dd MMM yyyy').format(dateTime);
+    String formattedTime = DateFormat('HH:mm').format(dateTime);
+    return '$formattedDate, $formattedTime';
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -124,11 +137,11 @@ class ProcessOrderState extends State<ProcessOrder> {
                       children: [
                         ListTile(
                           leading: Text(
-                            'ORDER RECEIVED:',
+                            'ORDER CREATED:',
                             style: CTextTheme.greyTextTheme.headlineMedium,
                           ),
                           title: Text(
-                            '${widget.order?.orderStage?.inProgress.dateUpdated ?? 'Loading...'}',
+                            getFormattedDateTime(widget.order?.createdAt.toString()),
                             style: CTextTheme.blackTextTheme.headlineMedium,
                           ),
                         ),
@@ -196,7 +209,7 @@ class ProcessOrderState extends State<ProcessOrder> {
                             style: CTextTheme.greyTextTheme.headlineMedium,
                           ),
                           title: Text(
-                            '${widget.order?.orderStage?.inProgress.dateUpdated ?? 'Loading...'}',
+                            getFormattedDateTime(widget.order?.orderStage?.inProgress.dateUpdated?.toString()),
                             style: CTextTheme.blackTextTheme.headlineMedium,
                           ),
                         ),
@@ -258,7 +271,7 @@ class ProcessOrderState extends State<ProcessOrder> {
                         ),
                         ListTile(
                           leading: Text(
-                            'FINAL PRICE',
+                            'PRICE',
                             style: CTextTheme.greyTextTheme.headlineMedium,
                           ),
                           title: Text(

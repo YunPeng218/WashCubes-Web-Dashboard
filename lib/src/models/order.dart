@@ -10,6 +10,7 @@ class Order {
   final CollectionLockerDetails? collectionSite;
   final String serviceId;
   final List<OrderItem> orderItems;
+  final List<OrderItem> oldOrderItems;
   final double estimatedPrice;
   final double? finalPrice;
   final OrderStage? orderStage;
@@ -26,6 +27,7 @@ class Order {
     required this.collectionSite,
     required this.serviceId,
     required this.orderItems,
+    required this.oldOrderItems,
     required this.estimatedPrice,
     required this.finalPrice,
     required this.orderStage,
@@ -50,6 +52,9 @@ class Order {
       orderItems: (json['orderItems'] as List<dynamic>)
           .map((item) => OrderItem.fromJson(item))
           .toList(),
+      oldOrderItems: (json['oldOrderItems'] as List<dynamic>)
+          .map((item) => OrderItem.fromJson(item))
+          .toList(),
       estimatedPrice: json['estimatedPrice'].toDouble() ?? 0.0,
       finalPrice: json['finalPrice']?.toDouble() ?? 0.0,
       orderStage: json['orderStage'] != null
@@ -64,11 +69,11 @@ class Order {
 
   String getFormattedDateTime(String dateString) {
     DateTime dateTime = DateTime.parse(dateString);
-    final timeZoneOffset = Duration(hours: 8);
+    const timeZoneOffset = Duration(hours: 8);
     dateTime = dateTime.add(timeZoneOffset);
-    String formattedDate = DateFormat.yMMMd().format(dateTime);
-    String formattedTime = DateFormat.jm().format(dateTime);
-    return '${formattedDate} / ${formattedTime}';
+    String formattedDate = DateFormat('dd MMM yyyy').format(dateTime);
+    String formattedTime = DateFormat('HH:mm').format(dateTime);
+    return '$formattedDate, $formattedTime';
   }
 }
 
