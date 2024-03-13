@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
 import 'package:washcubes_admindashboard/src/constants/image_strings.dart';
 import 'package:washcubes_admindashboard/src/constants/sizes.dart';
-import 'package:washcubes_admindashboard/src/features/admin/screens/homepage/admin_dashboard.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/homepage/central_hub.dart';
 import 'package:washcubes_admindashboard/src/features/operator/screens/login/operator_login_page.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 
@@ -53,7 +53,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                         onPressed: (){
                           Navigator.pushAndRemoveUntil(
                             context,
-                            MaterialPageRoute(builder: (context) => const AdminDashboard()), 
+                            MaterialPageRoute(builder: (context) => const CentralHub()), 
                             (route) => false
                           );
                         }, 

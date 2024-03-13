@@ -1,7 +1,4 @@
-2024/03/13-13:26:29.127 40b4 Reusing MANIFEST C:\Users\waihu\AppData\Local\Temp\flutter_tools.be834f56\flutter_tools_chrome_device.24c4269\Default\Site Characteristics Database/MANIFEST-000001
-2024/03/13-13:26:29.129 40b4 Recovering log #3
-2024/03/13-13:26:29.129 40b4 Level-0 table #6: started
-2024/03/13-13:26:29.133 40b4 Level-0 table #6: 272 bytes OK
-2024/03/13-13:26:29.133 40b4 Recovering log #6
-2024/03/13-13:26:29.134 40b4 Reusing old log C:\Users\waihu\AppData\Local\Temp\flutter_tools.be834f56\flutter_tools_chrome_device.24c4269\Default\Site Characteristics Database/000006.log 
-2024/03/13-13:26:29.137 40b4 Delete type=0 #3
+2024/03/13-13:57:27.799 3c68 Reusing MANIFEST C:\Users\waihu\AppData\Local\Temp\flutter_tools.7c3d6920\flutter_tools_chrome_device.be252f29\Default\Site Characteristics Database/MANIFEST-000001
+2024/03/13-13:57:27.802 3c68 Recovering log #6
+2024/03/13-13:57:27.802 3c68 Reusing old log C:\Users\waihu\AppData\Local\Temp\flutter_tools.7c3d6920\flutter_tools_chrome_device.be252f29\Default\Site Characteristics Database/000006.log 
+2024/03/13-13:57:27.804 3c68 Delete type=0 #3
