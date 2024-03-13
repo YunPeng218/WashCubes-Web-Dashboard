@@ -278,14 +278,13 @@ class OrderList extends StatelessWidget {
                   )),
                   DataCell(
                     Text(
-                      order.orderStage?.processingComplete.status == true
+                      (order.orderStage?.processingComplete.status == true && order.orderStage?.orderError.returnProcessed == false)
                           ? 'Ready'
                           : order.orderStage?.getInProgressStatus() ??
                               'Loading...',
                       style: CTextTheme.blackTextTheme.headlineMedium?.copyWith(
                           color: _getStatusColor(
-                              order.orderStage?.processingComplete.status ==
-                                      true
+                                (order.orderStage?.processingComplete.status == true && order.orderStage?.orderError.returnProcessed == false)
                                   ? 'Ready'
                                   : order.orderStage?.getInProgressStatus() ??
                                       'Loading...')),
