@@ -34,7 +34,9 @@ class PendingOrderState extends State<PendingOrder> {
   Map<String, int> updatedOrderItems = {};
   Service? service;
   ServiceItem? selectedItem;
+  int selectedQuantity = 0;
   List<OrderItem> orderItems = [];
+  List<OrderItem> newOrderItems = [];
   List<Uint8List> fileBytesList = [];
   List<String> fileNamesList = [];
   List<String> imagesUrl = [];
@@ -44,36 +46,20 @@ class PendingOrderState extends State<PendingOrder> {
     super.initState();
     orderItems = widget.order?.orderItems ?? [];
     getServiceDetails();
-    getFinalPrice();
   }
 
   double getFinalPrice() {
     double finalPrice = 0.0;
     if (service != null) {
-      updatedOrderItems.forEach((itemId, quantity) {
-        ServiceItem? item;
-        for (var serviceItem in service!.items) {
-          if (serviceItem.id == itemId) {
-            item = serviceItem;
-            break;
-          }
-        }
-
+      updatedOrderItems.forEach((key, value) {
+        ServiceItem? item =
+            service?.items.firstWhere((item) => key == item.name);
         if (item != null) {
-          finalPrice += item.price * quantity;
+          finalPrice += item.price * value;
         }
       });
     }
     return finalPrice;
-  }
-
-  double updateEstimatedPrice() {
-    double estimatedPrice = 0.0;
-    if (selectedItem != null) {
-      int quantity = updatedOrderItems[selectedItem?.id] ?? 0;
-      estimatedPrice = (selectedItem?.price ?? 0) * quantity;
-    }
-    return estimatedPrice;
   }
 
   Future<void> getServiceDetails() async {
@@ -88,7 +74,6 @@ class PendingOrderState extends State<PendingOrder> {
         if (data.containsKey('service')) {
           final dynamic serviceData = data['service'];
           final Service fetchedService = Service.fromJson(serviceData);
-          print(fetchedService);
           setState(() {
             service = fetchedService;
           });
@@ -96,7 +81,7 @@ class PendingOrderState extends State<PendingOrder> {
           for (var orderItem in widget.order!.orderItems) {
             ServiceItem item = service!.items
                 .firstWhere((item) => item.name == orderItem.name);
-            updatedOrderItems[item.id] = orderItem.quantity;
+            updatedOrderItems[item.name] = orderItem.quantity;
           }
         }
       }
@@ -162,9 +147,26 @@ class PendingOrderState extends State<PendingOrder> {
     if (widget.order != null) {
       try {
         double finalPrice = getFinalPrice();
+
+        updatedOrderItems.forEach((key, value) {
+          ServiceItem? item =
+              service?.items.firstWhere((item) => key == item.name);
+          OrderItem newItem = OrderItem(
+            id: item!.id,
+            name: key,
+            unit: item.unit,
+            price: item.price,
+            quantity: value,
+            cumPrice: item.price * value, // Ensure cumPrice is not null
+          );
+          setState(() {
+            newOrderItems.add(newItem);
+          });
+        });
+
         final Map<String, dynamic> data = {
           'orderId': widget.order?.id,
-          'orderItems': orderItems.map((item) => item.toJson()).toList(),
+          'orderItems': newOrderItems.map((item) => item.toJson()).toList(),
           'finalPrice': finalPrice,
           'proofPicUrl': jsonEncode(imagesUrl)
         };
@@ -294,19 +296,22 @@ class PendingOrderState extends State<PendingOrder> {
       );
       return;
     }
-    int quantity = updatedOrderItems[selectedItem?.id] ?? 0;
-    if (quantity > 0) {
+    if (selectedQuantity > 0) {
+      ServiceItem? item =
+          service?.items.firstWhere((item) => selectedItem?.name == item.name);
       OrderItem newItem = OrderItem(
-        id: selectedItem?.id ?? 'N/A',
-        name: selectedItem?.name ?? 'N/A',
-        unit: selectedItem?.unit ?? 'N/A',
-        price: selectedItem?.price ?? 0,
-        quantity: quantity,
-        cumPrice: updateEstimatedPrice(), // Ensure cumPrice is not null
+        id: item!.id,
+        name: item.name,
+        unit: item.unit,
+        price: item.price,
+        quantity: selectedQuantity,
+        cumPrice: item.price * selectedQuantity, // Ensure cumPrice is not null
       );
       setState(() {
+        updatedOrderItems[selectedItem!.name] = selectedQuantity;
         orderItems.add(newItem);
         selectedItem = null;
+        selectedQuantity = 0;
       });
     } else {
       showDialog(
@@ -390,7 +395,8 @@ class PendingOrderState extends State<PendingOrder> {
                             style: CTextTheme.greyTextTheme.headlineMedium,
                           ),
                           title: Text(
-                            getFormattedDateTime(widget.order?.createdAt.toString()),
+                            getFormattedDateTime(
+                                widget.order?.createdAt.toString()),
                             style: CTextTheme.blackTextTheme.headlineMedium,
                           ),
                         ),
@@ -458,7 +464,9 @@ class PendingOrderState extends State<PendingOrder> {
                             style: CTextTheme.greyTextTheme.headlineMedium,
                           ),
                           title: Text(
-                            getFormattedDateTime(widget.order?.orderStage?.inProgress.dateUpdated?.toString()),
+                            getFormattedDateTime(widget
+                                .order?.orderStage?.inProgress.dateUpdated
+                                ?.toString()),
                             style: CTextTheme.blackTextTheme.headlineMedium,
                           ),
                         ),
@@ -715,10 +723,15 @@ class PendingOrderState extends State<PendingOrder> {
                                             initialQuantity:
                                                 orderItems[index].quantity,
                                             onChanged: (quantity) {
+                                              ServiceItem item = service!.items
+                                                  .firstWhere((item) =>
+                                                      orderItems[index].name ==
+                                                      item.name);
                                               setState(() {
-                                                updatedOrderItems[
-                                                        orderItems[index].id] =
+                                                updatedOrderItems[item.name] =
                                                     quantity;
+                                                // orderItems[index].quantity =
+                                                //     quantity;
                                               });
                                             }),
                                       ),
@@ -733,7 +746,7 @@ class PendingOrderState extends State<PendingOrder> {
                                     ),
                               Expanded(
                                 child: Text(
-                                  'RM${item.cumPrice.toStringAsFixed(2)}',
+                                  'RM${updatedOrderItems[item.name] != null ? (item.price * (updatedOrderItems[item.name] ?? 0) as num).toStringAsFixed(2) : item.cumPrice.toStringAsFixed(2)}',
                                   style:
                                       CTextTheme.blackTextTheme.headlineMedium,
                                   textAlign: TextAlign.center,
@@ -745,6 +758,7 @@ class PendingOrderState extends State<PendingOrder> {
                                       onPressed: () {
                                         setState(() {
                                           orderItems.removeAt(index);
+                                          updatedOrderItems.remove(item.name);
                                         });
                                       },
                                       icon: const Icon(
@@ -817,9 +831,7 @@ class PendingOrderState extends State<PendingOrder> {
                                         onChanged: (quantity) {
                                           setState(() {
                                             if (selectedItem != null) {
-                                              updatedOrderItems[
-                                                  selectedItem?.id ??
-                                                      'N/A'] = quantity;
+                                              selectedQuantity = quantity;
                                             }
                                           });
                                         }),
@@ -827,7 +839,7 @@ class PendingOrderState extends State<PendingOrder> {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    'RM${updateEstimatedPrice().toStringAsFixed(2)}',
+                                    'RM${selectedItem != null ? (selectedItem!.price * selectedQuantity).toStringAsFixed(2) : '0.00'}',
                                     style: CTextTheme
                                         .blackTextTheme.headlineMedium,
                                     textAlign: TextAlign.center,

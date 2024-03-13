@@ -15,7 +15,9 @@ import 'package:washcubes_admindashboard/src/features/operator/screens/order_det
 import 'package:washcubes_admindashboard/src/features/operator/screens/order_detail/ready_order.dart';
 
 class OrderTable extends StatefulWidget {
-  const OrderTable({super.key});
+  final String? filter;
+
+  const OrderTable({super.key, required this.filter});
 
   @override
   State<OrderTable> createState() => OrderTableState();
@@ -63,20 +65,18 @@ class OrderTableState extends State<OrderTable> {
     }
   }
 
-  void viewOrder(Order order, String serviceName) {
-    // showDialog(
-    //   context: context,
-    //   builder: (BuildContext context) {
-    //     return OrderDetails(
-    //       order: order,
-    //       serviceName: serviceName,
-    //     );
-    //   },
-    // );
+  List<Order> filterOrders(List<Order> orders, String? filter) {
+    if (filter == null) {
+      return orders;
+    }
+    return orders
+        .where((order) => order.orderStage?.getInProgressStatus() == filter)
+        .toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    final filteredOrders = filterOrders(orders, widget.filter);
     return Column(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,20 +104,6 @@ class OrderTableState extends State<OrderTable> {
                   )
                 ],
               ),
-              // ElevatedButton(
-              //   onPressed: () {
-              //     showDialog(
-              //       context: context,
-              //       builder: (BuildContext context) {
-              //         return const InputTagPopUp();
-              //       },
-              //     );
-              //   },
-              //   child: Text(
-              //     'Scan Tag',
-              //     style: CTextTheme.blackTextTheme.headlineMedium,
-              //   ),
-              // ),
             ],
           ),
         ),
@@ -127,7 +113,7 @@ class OrderTableState extends State<OrderTable> {
             height: 40.0,
             child: TextField(
               decoration: InputDecoration(
-                hintText: 'Search by ID',
+                hintText: 'Search by Order Number',
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
@@ -141,7 +127,7 @@ class OrderTableState extends State<OrderTable> {
         ),
         Flexible(
           child: OrderList(
-            orders: orders,
+            orders: filteredOrders,
           ),
         ),
       ],
@@ -217,7 +203,7 @@ class OrderList extends StatelessWidget {
           columns: [
             DataColumn(
                 label: Text(
-              'ID',
+              'Order No.',
               style: CTextTheme.greyTextTheme.headlineMedium,
             )),
             DataColumn(
