@@ -187,7 +187,7 @@ class OrderErrorState extends State<OrderError> {
                             style: CTextTheme.blackTextTheme.headlineMedium?.copyWith(
                               color: widget.order?.orderStage?.getInProgressStatus() == 'Order Error'
                                   ? Colors.red
-                                  : null,
+                                  : Colors.grey,
                             ),
                           ),
                         ),

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
 import 'package:washcubes_admindashboard/src/features/operator/screens/order_detail/error_order.dart';
+import 'package:washcubes_admindashboard/src/features/operator/screens/order_detail/order_returned.dart';
 //import 'package:washcubes_admindashboard/src/features/operator/screens/input_tag/tag_input_popup.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 import 'dart:convert';
@@ -400,6 +401,18 @@ class OrderList extends StatelessWidget {
           context: context,
           builder: (BuildContext context) {
             return OrderError(
+              order: order,
+              serviceName: serviceName,
+              receiverDetails: receiverDetails,
+            );
+          },
+        );
+        break;
+      case 'Returned':
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return OrderReturned(
               order: order,
               serviceName: serviceName,
               receiverDetails: receiverDetails,

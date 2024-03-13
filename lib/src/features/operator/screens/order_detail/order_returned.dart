@@ -3,12 +3,12 @@ import 'package:intl/intl.dart';
 import 'package:washcubes_admindashboard/src/models/order.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 
-class ReadyOrder extends StatefulWidget {
+class OrderReturned extends StatefulWidget {
   final Order? order;
   final String serviceName;
   final List<String> receiverDetails;
 
-  const ReadyOrder({
+  const OrderReturned({
     super.key,
     required this.order,
     required this.serviceName,
@@ -16,10 +16,10 @@ class ReadyOrder extends StatefulWidget {
   });
 
   @override
-  State<ReadyOrder> createState() => ReadyOrderState();
+  State<OrderReturned> createState() => OrderReturnedState();
 }
 
-class ReadyOrderState extends State<ReadyOrder> {
+class OrderReturnedState extends State<OrderReturned> {
 
   String getFormattedDateTime(String? dateString) {
     if (dateString == null) {
@@ -114,7 +114,7 @@ class ReadyOrderState extends State<ReadyOrder> {
                             widget.order?.orderStage?.getInProgressStatus() ??
                                 'Loading...',
                             style: CTextTheme.blackTextTheme.headlineMedium
-                                ?.copyWith(color: Colors.green),
+                                ?.copyWith(color: Colors.blue),
                           ),
                         ),
                       ],
@@ -259,9 +259,9 @@ class ReadyOrderState extends State<ReadyOrder> {
                   // Order Item List
                   ListView.builder(
                     shrinkWrap: true,
-                    itemCount: widget.order!.orderItems.length,
+                    itemCount: widget.order!.oldOrderItems.length,
                     itemBuilder: (context, index) {
-                      final item = widget.order!.orderItems[index];
+                      final item = widget.order!.oldOrderItems[index];
                       return Column(
                         children: [
                           Row(

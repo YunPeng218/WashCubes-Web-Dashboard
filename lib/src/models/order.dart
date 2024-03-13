@@ -273,6 +273,9 @@ class OrderStage {
   }
 
   String getInProgressStatus() {
+    if (orderError.returnProcessed) {
+      return 'Returned';
+    }
     if (processingComplete.status) {
       return 'Ready';
     }
@@ -349,6 +352,7 @@ class OrderErrorStatus {
   List<String> proofPicUrl;
   bool userRejected;
   bool userAccepted;
+  bool returnProcessed;
 
   OrderErrorStatus({
     required this.status,
@@ -356,6 +360,7 @@ class OrderErrorStatus {
     required this.proofPicUrl,
     required this.userRejected,
     required this.userAccepted,
+    required this.returnProcessed
   });
 
   factory OrderErrorStatus.fromJson(Map<String, dynamic> json) {
@@ -367,6 +372,7 @@ class OrderErrorStatus {
       proofPicUrl: List<String>.from(json['proofPicUrl'] ?? []),
       userRejected: json['userRejected'] ?? false,
       userAccepted: json['userAccepted'] ?? false,
+      returnProcessed: json['returnProcessed'] ?? false,
     );
   }
 
@@ -377,6 +383,7 @@ class OrderErrorStatus {
       'proofPicUrls': proofPicUrl,
       'userRejected': userRejected,
       'userAccepted': userAccepted,
+      'returnProcessed': returnProcessed
     };
   }
 }
