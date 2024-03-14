@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
 import 'package:washcubes_admindashboard/src/constants/image_strings.dart';
 import 'package:washcubes_admindashboard/src/constants/sizes.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/profile/admin_profile.dart';
+import 'package:washcubes_admindashboard/src/features/operator/screens/profile/operator_profile.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 
 AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
@@ -28,10 +30,6 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
             ),
           ),
           Expanded(child: Container()), //Spacing
-          //notification Icon Button
-          // IconButton(onPressed: (){
-          //   //TODO: Notification Feature no needed
-          // }, icon: const Icon(Icons.notifications_outlined, color: AppColors.cBlackColor,)),
           //Divider
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 24, 0),
@@ -45,7 +43,13 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
           CircleAvatar(
             child: IconButton(
                 onPressed: () {
-                  //TODO: Profile Pop Up
+                  //TODO: Profile Pop Up, make it display operator / admin profile based on the user
+                  showDialog(
+                    context: context, 
+                    builder: (BuildContext context) {
+                      return const AdminProfile();
+                    },
+                  );
                 },
                 icon: const Icon(
                   Icons.person_outline,
