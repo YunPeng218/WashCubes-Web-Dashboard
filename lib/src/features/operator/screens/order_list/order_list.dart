@@ -1,10 +1,10 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
 import 'package:washcubes_admindashboard/src/features/operator/screens/order_detail/error_order.dart';
 import 'package:washcubes_admindashboard/src/features/operator/screens/order_detail/order_returned.dart';
-//import 'package:washcubes_admindashboard/src/features/operator/screens/input_tag/tag_input_popup.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -26,6 +26,7 @@ class OrderTable extends StatefulWidget {
 
 class OrderTableState extends State<OrderTable> {
   List<Order> orders = [];
+  List<Order> allOrders = [];
 
   @override
   void initState() {
@@ -53,6 +54,7 @@ class OrderTableState extends State<OrderTable> {
           print(fetchedOrders);
           setState(() {
             orders = fetchedOrders;
+            allOrders = fetchedOrders;
           });
         } else {
           print('Response data does not contain services.');
@@ -69,15 +71,24 @@ class OrderTableState extends State<OrderTable> {
   List<Order> filterOrders(List<Order> orders, String? filter) {
     if (filter == null) {
       return orders;
-    }
+    }   
     return orders
         .where((order) => order.orderStage?.getInProgressStatus() == filter)
         .toList();
   }
 
+  List<Order> filterOrdersByID(List<Order> orders, String? filter) {
+    if (filter == null) {
+      return orders;
+    }
+    return orders
+        .where((orders) => orders.orderNumber.contains(filter))
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final filteredOrders = filterOrders(orders, widget.filter);
+    var filteredOrders = filterOrders(orders, widget.filter);
     return Column(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,7 +132,10 @@ class OrderTableState extends State<OrderTable> {
                 ),
               ),
               onChanged: (value) {
-                //TODO: Handle search functionality
+                setState(() {
+                  orders = allOrders;
+                  orders = filterOrdersByID(allOrders, value);
+                });
               },
             ),
           ),
@@ -278,17 +292,13 @@ class OrderList extends StatelessWidget {
                   )),
                   DataCell(
                     Text(
-                      (order.orderStage?.processingComplete.status == true && order.orderStage?.orderError.returnProcessed == false)
-                          ? 'Ready'
-                          : order.orderStage?.getInProgressStatus() ??
-                              'Loading...',
-                      style: CTextTheme.blackTextTheme.headlineMedium?.copyWith(
-                          color: _getStatusColor(
-                                (order.orderStage?.processingComplete.status == true && order.orderStage?.orderError.returnProcessed == false)
-                                  ? 'Ready'
-                                  : order.orderStage?.getInProgressStatus() ??
-                                      'Loading...')),
-                    ),
+                        order.orderStage?.getInProgressStatus() ??
+                        'Loading...',
+                        style: CTextTheme.blackTextTheme.headlineMedium?.copyWith(
+                        color: _getStatusColor(
+                          order.orderStage?.getInProgressStatus() ??
+                        'Loading...')),
+                      ),
                   ),
                   DataCell(
                     ElevatedButton(
