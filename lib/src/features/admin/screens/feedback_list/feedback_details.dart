@@ -93,7 +93,7 @@ class _FeedbackDetailsState extends State<FeedbackDetails> {
               ],
             ),
             const Divider(height: cDefaultSize),
-            Text('FEEDBACK', style: CTextTheme.greyTextTheme.headlineLarge,),
+            Text('MESSAGE', style: CTextTheme.greyTextTheme.headlineLarge,),
             const SizedBox(height: 10.0),
             Text(widget.feedback.message, style: CTextTheme.blackTextTheme.headlineLarge,),
             const Divider(height: cDefaultSize),

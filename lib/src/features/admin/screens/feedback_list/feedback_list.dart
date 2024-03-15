@@ -43,7 +43,6 @@ class _FeedbackTableState extends State<FeedbackTable> {
           setState(() {
             feedbacks = fetchedFeedbacks;
           });
-          print(feedbacks);
         } else {
           print('Response data does not contain services.');
         }
@@ -116,6 +115,7 @@ class _FeedbackTableState extends State<FeedbackTable> {
   }
 }
 
+// ignore: must_be_immutable
 class FeedbackList extends StatelessWidget {
   List<Feedbacks> feedbacks = [];
 

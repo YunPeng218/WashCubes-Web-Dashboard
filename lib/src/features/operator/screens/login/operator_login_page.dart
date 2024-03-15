@@ -146,11 +146,6 @@ class _OperatorLoginPageState extends State<OperatorLoginPage> {
                           _isObscure = !_isObscure;
                         });
                       },
-                      onLongPressEnd: (_) {
-                        setState(() {
-                          _isObscure = !_isObscure;
-                        });
-                      },
                       child: Icon(
                         //If Obscure=true, use visibility_off icon, else use visibility icon
                         _isObscure ? Icons.visibility_off : Icons.visibility,
