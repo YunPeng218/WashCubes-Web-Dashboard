@@ -47,7 +47,8 @@ AppBar topNavigationBar(BuildContext context, GlobalKey<ScaffoldState> key) =>
                   showDialog(
                     context: context, 
                     builder: (BuildContext context) {
-                      return const AdminProfile();
+                      // return const AdminProfile();
+                      return const OperatorProfile();
                     },
                   );
                 },

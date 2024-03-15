@@ -41,8 +41,8 @@ class _AdminProfileState extends State<AdminProfile> {
                   child: Stack(
                     children: <Widget>[
                       Container(
-                        width: 130,
-                        height: 130,
+                        width: 250,
+                        height: 250,
                         decoration: BoxDecoration(
                           border: Border.all(
                             width: 4,
@@ -72,8 +72,8 @@ class _AdminProfileState extends State<AdminProfile> {
                             // showEditDialog(context);
                           },
                           child: Container(
-                            height: 40,
-                            width: 40,
+                            height: 60,
+                            width: 60,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(
@@ -82,7 +82,7 @@ class _AdminProfileState extends State<AdminProfile> {
                               ),
                               color: AppColors.cGreyColor1,
                             ),
-                            child: const Icon(Icons.camera_alt_rounded, color: AppColors.cBlueColor3),
+                            child: const Icon(Icons.camera_alt_rounded, color: AppColors.cBlueColor3, size: 40,),
                           ),
                         ),
                       ),
