@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
 import 'package:washcubes_admindashboard/src/constants/sizes.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:washcubes_admindashboard/src/constants/text_strings.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
+import 'package:washcubes_admindashboard/src/models/feedback.dart';
 
 class FeedbackDetails extends StatefulWidget {
-  const FeedbackDetails({super.key});
+  final Feedbacks feedback;
+
+  const FeedbackDetails({super.key, required this.feedback});
 
   @override
   State<FeedbackDetails> createState() => _FeedbackDetailsState();
@@ -37,7 +39,7 @@ class _FeedbackDetailsState extends State<FeedbackDetails> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'User ID: #9612',
+              'Feedback ID: ${widget.feedback.feedbackID}',
               style: CTextTheme.blackTextTheme.displayLarge,
             ),
             const SizedBox(height: cDefaultSize),
@@ -46,13 +48,13 @@ class _FeedbackDetailsState extends State<FeedbackDetails> {
                 Expanded(
                   child: ListTile(
                     leading: Text('USERNAME', style: CTextTheme.greyTextTheme.headlineLarge,),
-                    title: Text('Trimity Wang', style: CTextTheme.blackTextTheme.headlineLarge,),
+                    title: Text(widget.feedback.user!.phoneNumber.toString(), style: CTextTheme.blackTextTheme.headlineLarge,),
                   )
                 ),
                 Expanded(
                   child: ListTile(
                     leading: Text('DATE RECEIVED', style: CTextTheme.greyTextTheme.headlineLarge,),
-                    title: Text('Nov 23, 2023, 12:59', style: CTextTheme.blackTextTheme.headlineLarge,),
+                    title: Text(widget.feedback.getFormattedDateTime(widget.feedback.receivedAt), style: CTextTheme.blackTextTheme.headlineLarge,),
                   )
                 ),
               ],
@@ -61,8 +63,8 @@ class _FeedbackDetailsState extends State<FeedbackDetails> {
               children: [
                 Expanded(
                   child: ListTile(
-                    leading: Text('CATEGORY', style: CTextTheme.greyTextTheme.headlineLarge,),
-                    title: Text('Overall Service', style: CTextTheme.blackTextTheme.headlineLarge,),
+                    leading: Text('IMPROVEMENT\nCATEGORIES', style: CTextTheme.greyTextTheme.headlineLarge,),
+                    title: Text(widget.feedback.improvementCategories.toString().replaceAll('[', '').replaceAll(']', ''), style: CTextTheme.blackTextTheme.headlineLarge,),
                   )
                 ),
                 Expanded(
@@ -70,10 +72,9 @@ class _FeedbackDetailsState extends State<FeedbackDetails> {
                     leading: Text('RATING', style: CTextTheme.greyTextTheme.headlineLarge,),
                     title: Row(
                       children: [
-                        Text('Satisfied', style: CTextTheme.blueTextTheme.headlineLarge,),
                         RatingBar.builder(
-                          initialRating: 5,
-                          minRating: 1,
+                          initialRating: widget.feedback.starRating,
+                          minRating: 0.5,
                           direction: Axis.horizontal,
                           allowHalfRating: true,
                           itemCount: 5,
@@ -94,7 +95,7 @@ class _FeedbackDetailsState extends State<FeedbackDetails> {
             const Divider(height: cDefaultSize),
             Text('FEEDBACK', style: CTextTheme.greyTextTheme.headlineLarge,),
             const SizedBox(height: 10.0),
-            Text(cFeedbackComment, style: CTextTheme.blackTextTheme.headlineLarge,), //TODO: Text from textstring file cus too long
+            Text(widget.feedback.message, style: CTextTheme.blackTextTheme.headlineLarge,),
             const Divider(height: cDefaultSize),
           ],
         ),

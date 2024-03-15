@@ -5,7 +5,7 @@ const LockersPageRoute = "Lockers";
 const UsersPageRoute = "Users";
 const RidersPageRoute = "Riders";
 const OperatorsPageRoute = "Operators";
-const FeedbackPageRoute = "Feedback";
+const FeedbackPageRoute = "Feedbacks";
 const LogOutPageRoute = "Log Out";
 
 List sideMenuItems = [

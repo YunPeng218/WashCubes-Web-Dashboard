@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:washcubes_admindashboard/src/common_widgets/top_nav.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/dashboard/admin_dashboard.dart';
-import 'package:washcubes_admindashboard/src/features/admin/screens/feedback/feedback.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/feedback_list/feedback_list.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/lockers/locker.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/login/admin_login_page.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/operators/operator.dart';
@@ -64,7 +64,7 @@ class _CentralHubState extends State<CentralHub> {
       case 'Operators':
         return OperatorData();
       case 'Feedback':
-        return FeedbackList();
+        return FeedbackTable();
       default:
         // If no filter is selected, show dashboard
         return OrderData();

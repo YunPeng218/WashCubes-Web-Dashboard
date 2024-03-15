@@ -1,2 +1,0 @@
-const String cFeedbackComment 
-= 'The i3Cube smart locker is super convenient! Loved how easy it was to drop off and collect my laundry.  I enjoyed the seamless experience of effortlessly dropping off and collecting my laundry. The user-friendly interface and efficient operation of the smart locker made the entire process not only convenient but also a delight to use.';

@@ -1,2 +1,15 @@
-2024/03/15-18:14:33.597 d44 Creating DB C:\Users\waihu\AppData\Local\Temp\flutter_tools.7391dc89\flutter_tools_chrome_device.f53d1557\Default\Site Characteristics Database since it was missing.
-2024/03/15-18:14:33.642 d44 Reusing MANIFEST C:\Users\waihu\AppData\Local\Temp\flutter_tools.7391dc89\flutter_tools_chrome_device.f53d1557\Default\Site Characteristics Database/MANIFEST-000001
+2024/03/16-02:03:52.592 a68 Reusing MANIFEST C:\Users\YunPeng\AppData\Local\Temp\flutter_tools.568bdc36\flutter_tools_chrome_device.a6e4ef2\Default\Site Characteristics Database/MANIFEST-000001
+2024/03/16-02:03:52.593 a68 Recovering log #3
+2024/03/16-02:03:52.593 a68 Level-0 table #3: started
+2024/03/16-02:03:52.595 a68 Level-0 table #3: 130 bytes OK
+2024/03/16-02:03:52.595 a68 Recovering log #6
+2024/03/16-02:03:52.595 a68 Level-0 table #4: started
+2024/03/16-02:03:52.598 a68 Level-0 table #4: 218 bytes OK
+2024/03/16-02:03:52.598 a68 Recovering log #10
+2024/03/16-02:03:52.598 a68 Reusing old log C:\Users\YunPeng\AppData\Local\Temp\flutter_tools.568bdc36\flutter_tools_chrome_device.a6e4ef2\Default\Site Characteristics Database/000010.log 
+2024/03/16-02:03:52.600 a68 Delete type=0 #3
+2024/03/16-02:03:52.600 a68 Delete type=2 #6
+2024/03/16-02:03:52.600 a68 Delete type=0 #6
+2024/03/16-02:03:52.600 a68 Delete type=2 #11
+2024/03/16-02:03:52.600 a68 Delete type=2 #13
+2024/03/16-02:03:52.600 a68 Delete type=2 #14
