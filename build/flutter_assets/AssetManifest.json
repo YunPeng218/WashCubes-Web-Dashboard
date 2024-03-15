@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"assets/images/profile_picture.png":["assets/images/profile_picture.png"],"assets/images/rider_pfp.png":["assets/images/rider_pfp.png"],"assets/logos/i3Cubes_logo.png":["assets/logos/i3Cubes_logo.png"],"packages/cupertino_icons/assets/CupertinoIcons.ttf":["packages/cupertino_icons/assets/CupertinoIcons.ttf"],"packages/flutter_dropzone_web/assets/flutter_dropzone.js":["packages/flutter_dropzone_web/assets/flutter_dropzone.js"]}
+=======
+{"assets/images/locker.png":["assets/images/locker.png"],"assets/images/profile_picture.png":["assets/images/profile_picture.png"],"assets/logos/i3Cubes_logo.png":["assets/logos/i3Cubes_logo.png"],"packages/cupertino_icons/assets/CupertinoIcons.ttf":["packages/cupertino_icons/assets/CupertinoIcons.ttf"],"packages/flutter_dropzone_web/assets/flutter_dropzone.js":["packages/flutter_dropzone_web/assets/flutter_dropzone.js"]}
+>>>>>>> admin-dashboard

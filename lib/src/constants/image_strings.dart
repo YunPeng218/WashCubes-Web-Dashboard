@@ -17,3 +17,5 @@ const String cRiderPFP = 'assets/images/profile_picture.png';
 // const String cTagDefault = "assets/images/tag_default.png";
 // const String cImageDefault = "assets/images/image_default.png";
 // const String cDone = "assets/images/done.png";
+
+const String cLocker = 'assets/images/locker.png';
