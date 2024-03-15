@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:washcubes_admindashboard/src/common_widgets/top_nav.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
@@ -8,9 +6,9 @@ import 'package:washcubes_admindashboard/src/features/admin/screens/feedback/fee
 import 'package:washcubes_admindashboard/src/features/admin/screens/lockers/locker.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/login/admin_login_page.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/operators/operator.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/orders/order_data.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/riders/rider.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/services/service.dart';
-import 'package:washcubes_admindashboard/src/features/operator/screens/order_list/order_list.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 
 class CentralHub extends StatefulWidget {
@@ -21,18 +19,6 @@ class CentralHub extends StatefulWidget {
 }
 
 class _CentralHubState extends State<CentralHub> {
-  // Dashboard Button List Data
-  // final List<Map<String, dynamic>> items = [
-  //   {'icon': Icons.auto_graph_rounded,'button-name': 'Dashboard',},
-  //   {'icon': Icons.business_center_outlined,'button-name': 'Orders', },
-  //   {'icon': Icons.room_service_outlined,'button-name': 'Services', },
-  //   {'icon': Icons.lock_outline_rounded,'button-name': 'Lockers', },
-  //   {'icon': Icons.person_outline_rounded,'button-name': 'Users', },
-  //   {'icon': Icons.delivery_dining_outlined,'button-name': 'Riders', },
-  //   {'icon': Icons.people_alt_outlined,'button-name': 'Operators', },
-  //   {'icon': Icons.chat_rounded,'button-name': 'Feedback', },
-  //   {'icon': Icons.logout_rounded,'button-name': 'Log Out', },
-  // ];
   String? selectedFeature;
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
@@ -65,12 +51,12 @@ class _CentralHubState extends State<CentralHub> {
   }
   Widget selectContent(String? selectedFeature) {
     switch (selectedFeature) {
-      case 'Dashboard':
-        return AdminDashboard();
+      // case 'Dashboard':
+      //   return AdminDashboard();
       case 'Orders':
-        return OrderTable(filter: 'Pending',);
-      case 'Services':
-        return Services();
+        return OrderData();
+      // case 'Services':
+      //   return Services();
       case 'Lockers':
         return LockerPage();
       case 'Riders':
@@ -81,7 +67,7 @@ class _CentralHubState extends State<CentralHub> {
         return FeedbackList();
       default:
         // If no filter is selected, show dashboard
-        return AdminDashboard();
+        return OrderData();
     }
   }
 }
@@ -104,9 +90,9 @@ class AdminSideMenuState extends State<AdminSideMenu> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 10),
-        buildNavBarItem('Dashboard', 'Dashboard'),
+        // buildNavBarItem('Dashboard', 'Dashboard'),
         buildNavBarItem('Orders', 'Orders'),
-        buildNavBarItem('Services', 'Services'),
+        // buildNavBarItem('Services', 'Services'),
         buildNavBarItem('Lockers', 'Lockers'),
         buildNavBarItem('Riders', 'Riders'),
         buildNavBarItem('Operators', 'Operators'),

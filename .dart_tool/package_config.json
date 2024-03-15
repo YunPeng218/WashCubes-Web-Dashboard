@@ -128,6 +128,12 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "flutter_rating_bar",
+      "rootUri": "file:///C:/Users/waihu/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_rating_bar-4.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
       "name": "flutter_test",
       "rootUri": "file:///C:/dev/flutter_windows_3.16.5-stable/flutter/packages/flutter_test",
       "packageUri": "lib/",
@@ -428,7 +434,7 @@
       "languageVersion": "3.3"
     }
   ],
-  "generated": "2024-03-13T05:46:17.172582Z",
+  "generated": "2024-03-14T16:54:22.107042Z",
   "generator": "pub",
   "generatorVersion": "3.3.0"
 }

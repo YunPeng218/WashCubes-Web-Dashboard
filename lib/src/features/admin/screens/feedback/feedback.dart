@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/feedback/feedback_table.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 
 class FeedbackList extends StatefulWidget {
@@ -48,7 +49,7 @@ class _FeedbackListState extends State<FeedbackList> {
             height: 40.0,
             child: TextField(
               decoration: InputDecoration(
-                hintText: 'Search by Order Number',
+                hintText: 'Search...',
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
@@ -60,11 +61,7 @@ class _FeedbackListState extends State<FeedbackList> {
             ),
           ),
         ),
-        // Flexible(
-        //   child: OrderList(
-        //     orders: filteredOrders,
-        //   ),
-        // ),
+        const Flexible(child: FeedbackTable(),),
       ],
     );
   }

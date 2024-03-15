@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/lockers/locker_table.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 
 class LockerPage extends StatefulWidget {
@@ -48,7 +49,7 @@ class _LockerPageState extends State<LockerPage> {
             height: 40.0,
             child: TextField(
               decoration: InputDecoration(
-                hintText: 'Search by Order Number',
+                hintText: 'Search by Location..',
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
@@ -60,11 +61,10 @@ class _LockerPageState extends State<LockerPage> {
             ),
           ),
         ),
-        // Flexible(
-        //   child: OrderList(
-        //     orders: filteredOrders,
-        //   ),
-        // ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          child: Center(child: LockerTable())
+        ),
       ],
     );
   }

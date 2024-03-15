@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/orders/admin_order_table.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 
 class OrderData extends StatefulWidget {
@@ -60,11 +61,14 @@ class _OrderDataState extends State<OrderData> {
             ),
           ),
         ),
-        // Flexible(
-        //   child: OrderList(
-        //     orders: filteredOrders,
-        //   ),
-        // ),
+        const Flexible(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AdminOrderTable(),
+            ],
+          )
+        ),
       ],
     );
   }

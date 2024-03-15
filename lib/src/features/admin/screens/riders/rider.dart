@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/riders/add_rider.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/riders/rider_table.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 
 class RiderData extends StatefulWidget {
@@ -19,7 +21,7 @@ class _RiderDataState extends State<RiderData> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
@@ -39,6 +41,17 @@ class _RiderDataState extends State<RiderData> {
                   )
                 ],
               ),
+              //Add operator button
+              ElevatedButton(
+                onPressed: (){
+                  showDialog(
+                    context: context, 
+                    builder: (BuildContext context) {
+                      return const AddRider();
+                    },);
+                }, 
+                child: Text('Add New Rider', style: CTextTheme.blackTextTheme.headlineMedium,)
+              )
             ],
           ),
         ),
@@ -48,7 +61,7 @@ class _RiderDataState extends State<RiderData> {
             height: 40.0,
             child: TextField(
               decoration: InputDecoration(
-                hintText: 'Search by Order Number',
+                hintText: 'Search by ID or Username..',
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
@@ -60,11 +73,7 @@ class _RiderDataState extends State<RiderData> {
             ),
           ),
         ),
-        // Flexible(
-        //   child: OrderList(
-        //     orders: filteredOrders,
-        //   ),
-        // ),
+        const Expanded(child: RiderTable()),
       ],
     );
   }

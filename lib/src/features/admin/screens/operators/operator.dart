@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/operators/add_operator.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/operators/operator_table.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 
 class OperatorData extends StatefulWidget {
@@ -19,7 +22,7 @@ class _OperatorDataState extends State<OperatorData> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
@@ -39,6 +42,17 @@ class _OperatorDataState extends State<OperatorData> {
                   )
                 ],
               ),
+              //Add operator button
+              ElevatedButton(
+                onPressed: (){
+                  showDialog(
+                    context: context, 
+                    builder: (BuildContext context) {
+                      return const AddOperator();
+                    },);
+                }, 
+                child: Text('Add New Operator', style: CTextTheme.blackTextTheme.headlineMedium,)
+              )
             ],
           ),
         ),
@@ -48,7 +62,7 @@ class _OperatorDataState extends State<OperatorData> {
             height: 40.0,
             child: TextField(
               decoration: InputDecoration(
-                hintText: 'Search by Order Number',
+                hintText: 'Search by ID or Username..',
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
@@ -60,11 +74,7 @@ class _OperatorDataState extends State<OperatorData> {
             ),
           ),
         ),
-        // Flexible(
-        //   child: OrderList(
-        //     orders: filteredOrders,
-        //   ),
-        // ),
+        const Expanded(child: OperatorTable(),),
       ],
     );
   }
