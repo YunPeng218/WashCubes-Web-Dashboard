@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/operators/operator_table.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/rider_list/rider_list.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/top_nav/top_nav.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/feedback_list/feedback_list.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/lockers/locker.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/login/admin_login_page.dart';
-import 'package:washcubes_admindashboard/src/features/admin/screens/operators/operator.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/orders/order_data.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 
@@ -53,20 +53,20 @@ class _CentralHubState extends State<CentralHub> {
       // case 'Dashboard':
       //   return AdminDashboard();
       case 'Orders':
-        return OrderData();
+        return const OrderData();
       // case 'Services':
       //   return Services();
       case 'Lockers':
-        return LockerPage();
+        return const LockerPage();
       case 'Riders':
-        return RiderTable();
+        return const RiderTable();
       case 'Operators':
-        return OperatorData();
+        return const OperatorTable();
       case 'Feedback':
-        return FeedbackTable();
+        return const FeedbackTable();
       default:
         // If no filter is selected, show dashboard
-        return OrderData();
+        return const OrderData();
     }
   }
 }

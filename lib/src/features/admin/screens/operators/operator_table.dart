@@ -1,6 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:washcubes_admindashboard/config.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/operators/operator_details.dart';
+import 'package:washcubes_admindashboard/src/models/operator.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
+import 'package:washcubes_admindashboard/src/constants/colors.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/operators/add_operator.dart';
+import 'package:http/http.dart' as http;
 
 class OperatorTable extends StatefulWidget {
   const OperatorTable({super.key});
@@ -10,32 +17,122 @@ class OperatorTable extends StatefulWidget {
 }
 
 class _OperatorTableState extends State<OperatorTable> {
+  List<Operator> operators = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchOperatorsDetails();
+  }
+
+  Future<void> fetchOperatorsDetails() async {
+    try {
+      final response = await http.get(
+        Uri.parse('${url}admin/fetchOperators'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        if (data.containsKey('operators')) {
+          final List<dynamic> operatorData = data['operators'];
+          final List<Operator> fetchedOperators =
+              operatorData.map((operator) => Operator.fromJson(operator)).toList();
+          setState(() {
+            operators = fetchedOperators;
+          });
+        } else {
+          print('Response data does not contain services.');
+        }
+      } else {
+        print('Error: ${response.statusCode}');
+        print('Error message: ${response.body}');
+      }
+    } catch (error) {
+      print('Error Fetching Operators Details: $error');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'Operator Data',
+                    style: CTextTheme.blackTextTheme.displayLarge,
+                  ),
+                  IconButton(
+                    onPressed: () async {
+                      await fetchOperatorsDetails();
+                    },
+                    icon: const Icon(
+                      Icons.refresh_rounded,
+                      color: AppColors.cBlackColor,
+                    ),
+                  )
+                ],
+              ),
+              //Add operator button
+              ElevatedButton(
+                onPressed: (){
+                  showDialog(
+                    context: context, 
+                    builder: (BuildContext context) {
+                      return const AddOperator();
+                    },);
+                }, 
+                child: Text('Add New Operator', style: CTextTheme.blackTextTheme.headlineMedium,)
+              )
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: SizedBox(
+            height: 40.0,
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Search by Operator Name...',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+              onChanged: (value) {
+                //TODO: Handle search functionality
+              },
+            ),
+          ),
+        ),
+        Flexible(
+          child: OperatorList(
+            operators: operators,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class OperatorList extends StatelessWidget {
+  List<Operator> operators = [];
+
+  OperatorList({super.key, required this.operators});
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-
-    //TODO: Replace with actual Operator data
-    final List<OperatorDataRow> operators = [
-      OperatorDataRow(
-        operatorId: '#12345', 
-        operatorName: 'Aarav Patel', 
-        operatorEmail: 'optr3379@gmail.com', 
-        mobileNumber: '+60 12-345 6789'
-      ),
-      OperatorDataRow(
-        operatorId: '#12346', 
-        operatorName: 'Aarav Shatel', 
-        operatorEmail: 'optr3380@gmail.com', 
-        mobileNumber: '+60 12-345 6790'
-      ),
-      OperatorDataRow(
-        operatorId: '#12347', 
-        operatorName: 'Aarav Cartel', 
-        operatorEmail: 'optr3381@gmail.com', 
-        mobileNumber: '+60 12-345 6791'
-      ),
-    ];
-
     return Column(
       children: [
         DataTable(
@@ -43,22 +140,17 @@ class _OperatorTableState extends State<OperatorTable> {
           columns: [
             DataColumn(
                 label: Text(
-              'OPERATOR ID',
-              style: CTextTheme.greyTextTheme.headlineMedium,
-            )),
-            DataColumn(
-                label: Text(
               'OPERATOR NAME',
               style: CTextTheme.greyTextTheme.headlineMedium,
             )),
             DataColumn(
                 label: Text(
-              'USERNAME',
+              'EMAIL',
               style: CTextTheme.greyTextTheme.headlineMedium,
             )),
             DataColumn(
                 label: Text(
-              'MOBILE NUMBER',
+              'PHONE NUMBER',
               style: CTextTheme.greyTextTheme.headlineMedium,
             )),
             const DataColumn(label: Text('')),
@@ -67,19 +159,15 @@ class _OperatorTableState extends State<OperatorTable> {
               .map(
                 (operator) => DataRow(cells: [
                   DataCell(Text(
-                    operator.operatorId,
+                    operator.name,
                     style: CTextTheme.blackTextTheme.headlineMedium,
                   )),
                   DataCell(Text(
-                    operator.operatorName,
+                    operator.email,
                     style: CTextTheme.blackTextTheme.headlineMedium,
                   )),
                   DataCell(Text(
-                    operator.operatorEmail,
-                    style: CTextTheme.blackTextTheme.headlineMedium,
-                  )),
-                  DataCell(Text(
-                    operator.mobileNumber,
+                    operator.phoneNumber.toString(),
                     style: CTextTheme.blackTextTheme.headlineMedium,
                   )),
                   DataCell(
@@ -88,7 +176,7 @@ class _OperatorTableState extends State<OperatorTable> {
                         showDialog(
                           context: context, 
                           builder: (BuildContext context) {
-                            return const OperatorDetails();
+                            return OperatorDetails(operator: operator);
                           },);
                       },
                       child: Text(
@@ -143,18 +231,4 @@ class _OperatorTableState extends State<OperatorTable> {
       ],
     );
   }
-}
-
-class OperatorDataRow {
-  final String operatorId;
-  final String operatorName;
-  final String operatorEmail;
-  final String mobileNumber;
-
-  OperatorDataRow({
-    required this.operatorId,
-    required this.operatorName,
-    required this.operatorEmail,
-    required this.mobileNumber,
-  });
 }

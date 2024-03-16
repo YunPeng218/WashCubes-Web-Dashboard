@@ -61,7 +61,7 @@ class _RiderDetailsState extends State<RiderDetails> {
 
     if (confirmDelete == true) {
       final response = await http.delete(
-        Uri.parse('${url}deleteAccount'),
+        Uri.parse('${url}deleteRiderAccount'),
         body: {
           'email': email,
         },
@@ -77,7 +77,7 @@ class _RiderDetailsState extends State<RiderDetails> {
                 style: CTextTheme.blackTextTheme.headlineLarge,
               ),
               content: Text(
-                'This user has been deleted successfully.',
+                'This rider\'s account has been deleted successfully.',
                 textAlign: TextAlign.center,
                 style: CTextTheme.blackTextTheme.headlineSmall,
               ),
@@ -172,7 +172,7 @@ class _RiderDetailsState extends State<RiderDetails> {
                     title: Text(widget.rider.email, style: CTextTheme.blackTextTheme.displaySmall,),
                   ),
                   ListTile(
-                    leading: Text('MOBILE NUMBER', style: CTextTheme.greyTextTheme.displaySmall,),
+                    leading: Text('PHONE NUMBER', style: CTextTheme.greyTextTheme.displaySmall,),
                     title: Text(widget.rider.phoneNumber.toString(), style: CTextTheme.blackTextTheme.displaySmall,),
                   ),
                 ],

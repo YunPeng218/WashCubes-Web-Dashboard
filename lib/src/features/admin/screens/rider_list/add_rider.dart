@@ -222,7 +222,7 @@ class _AddRiderState extends State<AddRider> {
         );
         }
     } catch (error) {
-      print('Error registering user: $error');
+      print('Error registering rider: $error');
     }
   }
 

@@ -232,15 +232,3 @@ class RiderList extends StatelessWidget {
     );
   }
 }
-
-class RiderDataRow {
-  final String riderId;
-  final String riderName;
-  final String riderEmail;
-
-  RiderDataRow({
-    required this.riderId,
-    required this.riderName,
-    required this.riderEmail,
-  });
-}

@@ -1,19 +1,111 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:washcubes_admindashboard/config.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
-import 'package:washcubes_admindashboard/src/constants/image_strings.dart';
 import 'package:washcubes_admindashboard/src/constants/sizes.dart';
+import 'package:washcubes_admindashboard/src/models/operator.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
+import 'package:http/http.dart' as http;
 
 class OperatorDetails extends StatefulWidget {
-  const OperatorDetails({super.key});
+  final Operator operator;
+
+  const OperatorDetails({super.key, required this.operator});
 
   @override
   State<OperatorDetails> createState() => _OperatorDetailsState();
 }
 
 class _OperatorDetailsState extends State<OperatorDetails> {
+
+  void deleteAccount(String email) async {
+    bool confirmDelete = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Confirmation',
+            textAlign: TextAlign.center,
+            style: CTextTheme.blackTextTheme.headlineLarge,
+          ),
+          content: Text(
+            'Are you sure you want to delete this operator\'s account?',
+            textAlign: TextAlign.center,
+            style: CTextTheme.blackTextTheme.headlineSmall,
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+              child: Text(
+                'Cancel',
+                style: CTextTheme.blackTextTheme.headlineSmall,
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+              child: const Text(
+                'Delete',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmDelete == true) {
+      final response = await http.delete(
+        Uri.parse('${url}deleteOperatorAccount'),
+        body: {
+          'email': email,
+        },
+      );
+      if (response.statusCode == 200) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                'Success',
+                textAlign: TextAlign.center,
+                style: CTextTheme.blackTextTheme.headlineLarge,
+              ),
+              content: Text(
+                'This operator\'s account has been deleted successfully.',
+                textAlign: TextAlign.center,
+                style: CTextTheme.blackTextTheme.headlineSmall,
+              ),
+              actions: <Widget>[
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          'OK',
+                          style: CTextTheme.blackTextTheme.headlineSmall,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -56,9 +148,9 @@ class _OperatorDetailsState extends State<OperatorDetails> {
                           ),
                         ],
                         shape: BoxShape.circle,
-                        image: const DecorationImage(
+                        image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: AssetImage(cRiderPFP),
+                          image: NetworkImage(widget.operator.profilePicURL),
                         ),
                       ),
                     ),
@@ -72,20 +164,20 @@ class _OperatorDetailsState extends State<OperatorDetails> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ListTile(
-                    leading: Text('OPERATOR ID', style: CTextTheme.greyTextTheme.displaySmall,),
-                    title: Text('#12345', style: CTextTheme.blackTextTheme.displaySmall,),
-                  ),
-                  ListTile(
                     leading: Text('OPERATOR NAME', style: CTextTheme.greyTextTheme.displaySmall,),
-                    title: Text('Aarav Patel', style: CTextTheme.blackTextTheme.displaySmall,),
+                    title: Text(widget.operator.name, style: CTextTheme.blackTextTheme.displaySmall,),
                   ),
                   ListTile(
-                    leading: Text('MOBILE NUMBER', style: CTextTheme.greyTextTheme.displaySmall,),
-                    title: Text('+60 14-906 3472', style: CTextTheme.blackTextTheme.displaySmall,),
+                    leading: Text('IC NUMBER', style: CTextTheme.greyTextTheme.displaySmall,),
+                    title: Text(widget.operator.icNumber, style: CTextTheme.blackTextTheme.displaySmall,),
                   ),
                   ListTile(
                     leading: Text('EMAIL', style: CTextTheme.greyTextTheme.displaySmall,),
-                    title: Text('otps3345@gmail.com', style: CTextTheme.blackTextTheme.displaySmall,),
+                    title: Text(widget.operator.email, style: CTextTheme.blackTextTheme.displaySmall,),
+                  ),
+                  ListTile(
+                    leading: Text('PHONE NUMBER', style: CTextTheme.greyTextTheme.displaySmall,),
+                    title: Text(widget.operator.phoneNumber.toString(), style: CTextTheme.blackTextTheme.displaySmall,),
                   ),
                 ],
               ),
@@ -95,7 +187,9 @@ class _OperatorDetailsState extends State<OperatorDetails> {
       ),
       actions: [
         ElevatedButton(
-          onPressed: (){}, 
+          onPressed: (){
+            deleteAccount(widget.operator.email);
+          }, 
           child: Text('Delete Account', style: CTextTheme.blackTextTheme.headlineLarge,)
         )
       ],
