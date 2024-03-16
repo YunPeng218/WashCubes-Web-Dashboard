@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:washcubes_admindashboard/config.dart';
-import 'package:washcubes_admindashboard/src/features/admin/screens/operators/operator_details.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/operator_list/operator_details.dart';
 import 'package:washcubes_admindashboard/src/models/operator.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
-import 'package:washcubes_admindashboard/src/features/admin/screens/operators/add_operator.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/operator_list/add_operator.dart';
 import 'package:http/http.dart' as http;
 
 class OperatorTable extends StatefulWidget {

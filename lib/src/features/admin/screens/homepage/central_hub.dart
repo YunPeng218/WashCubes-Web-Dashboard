@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:washcubes_admindashboard/src/features/admin/screens/operators/operator_table.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/operator_list/operator_table.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/rider_list/rider_list.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/top_nav/top_nav.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';

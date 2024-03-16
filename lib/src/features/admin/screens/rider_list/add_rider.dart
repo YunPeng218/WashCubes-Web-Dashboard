@@ -196,7 +196,7 @@ class _AddRiderState extends State<AddRider> {
                 style: CTextTheme.blackTextTheme.headlineLarge
               ),
               content: Text(
-                'Rider with the same email or phone number is already exist. Please try with another email or phone number.',
+                'Rider with the same email or phone number is already exist. Please try again.',
                 textAlign: TextAlign.center,
                 style: CTextTheme.blackTextTheme.headlineSmall,
               ),

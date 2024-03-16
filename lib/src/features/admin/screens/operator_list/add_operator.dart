@@ -49,7 +49,7 @@ class _AddOperatorState extends State<AddOperator> {
       return;
     }
     // Mobile Number Validation
-    RegExp mobileNumberPattern = RegExp(r'^\+60 1[0-9]-\d{7,8}$');
+    RegExp mobileNumberPattern = RegExp(r'^(601)[0-46-9][0-9]{7,8}$');
     if (_mobileNumberController.text.isEmpty) {
       setState(() {
         errorTextMobileNumber = 'Please Enter Operator Mobile Number.';
@@ -214,7 +214,7 @@ class _AddOperatorState extends State<AddOperator> {
                 style: CTextTheme.blackTextTheme.headlineLarge
               ),
               content: Text(
-                'Operator with the same email or phone number or IC number is already exist. Please try with another email or phone number.',
+                'Operator with the same email or phone number or IC number is already exist. Please try again.',
                 textAlign: TextAlign.center,
                 style: CTextTheme.blackTextTheme.headlineSmall,
               ),
