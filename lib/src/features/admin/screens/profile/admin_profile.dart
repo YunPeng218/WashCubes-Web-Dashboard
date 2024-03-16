@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:washcubes_admindashboard/src/common_widgets/password_reset.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:washcubes_admindashboard/config.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
-import 'package:washcubes_admindashboard/src/constants/image_strings.dart';
 import 'package:washcubes_admindashboard/src/constants/sizes.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/password_reset/password_reset.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:http/http.dart' as http;
 
 class AdminProfile extends StatefulWidget {
   const AdminProfile({super.key});
@@ -13,6 +18,36 @@ class AdminProfile extends StatefulWidget {
 }
 
 class _AdminProfileState extends State<AdminProfile> {
+  Map<String, dynamic> adminDetails = {};
+
+  @override
+  void initState() {
+    super.initState();
+    getAdminDetails();
+  }
+
+  void getAdminDetails() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString('token') ?? '';
+      Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(token);
+      var reqUrl = '${url}admin?adminId=${jwtDecodedToken["_id"]}';
+      final response = await http.get(
+        Uri.parse(reqUrl),
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        setState(() {
+          adminDetails = data['admin'];
+        });
+      } else {
+        print('Failed to load admin details');
+      }
+    } catch (error) {
+      print('Error fetching admin details: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -40,52 +75,39 @@ class _AdminProfileState extends State<AdminProfile> {
                 child: Center(
                   child: Stack(
                     children: <Widget>[
-                      Container(
-                        width: 250,
-                        height: 250,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            width: 4,
-                            color: Theme.of(context).scaffoldBackgroundColor,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              spreadRadius: 2,
-                              blurRadius: 10,
-                              color: Colors.black.withOpacity(0.1),
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage(cRiderPFP),
-                          ),
-                        ),
-                      ),
-                      //Camera PFP Icon
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: GestureDetector(
-                          onTap: () {
-                            // showEditDialog(context);
-                          },
-                          child: Container(
-                            height: 60,
-                            width: 60,
+                      Stack(
+                        children: [
+                          Container(
+                            width: 250,
+                            height: 250,
                             decoration: BoxDecoration(
-                              shape: BoxShape.circle,
                               border: Border.all(
                                 width: 4,
-                                color: AppColors.cGreyColor1,
+                                color: Theme.of(context).scaffoldBackgroundColor,
                               ),
-                              color: AppColors.cGreyColor1,
+                              boxShadow: [
+                                BoxShadow(
+                                  spreadRadius: 2,
+                                  blurRadius: 10,
+                                  color: Colors.black.withOpacity(0.1),
+                                  offset: const Offset(0, 10),
+                                ),
+                              ],
+                              shape: BoxShape.circle,
+                              image: adminDetails['profilePicURL'] != null
+                                  ? DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage(adminDetails['profilePicURL']),
+                                    )
+                                  : null,
                             ),
-                            child: const Icon(Icons.camera_alt_rounded, color: AppColors.cBlueColor3, size: 40,),
                           ),
-                        ),
-                      ),
+                          if (adminDetails['profilePicURL'] == null)
+                            const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                        ],
+                      )
                     ],
                   ),
                 ),
@@ -96,23 +118,21 @@ class _AdminProfileState extends State<AdminProfile> {
                   children: [
                     ListTile(
                       leading: Text(
-                        'ADMIN ID',
+                        'ADMIN NAME',
                         style: CTextTheme.greyTextTheme.headlineLarge,
                       ),
-                      //TODO: Put ID here
                       title: Text(
-                        '#12345',
+                        adminDetails['name'] ?? 'Loading...',
                         style: CTextTheme.blackTextTheme.headlineLarge,
                       ),
                     ),
                     ListTile(
                       leading: Text(
-                        'ADMIN NAME',
+                        'ADMIN IC NUMBER',
                         style: CTextTheme.greyTextTheme.headlineLarge,
                       ),
-                      //TODO: Put name here
                       title: Text(
-                        'Aarav Patel',
+                        adminDetails['icNumber'] ?? 'Loading...',
                         style: CTextTheme.blackTextTheme.headlineLarge,
                       ),
                     ),
@@ -121,20 +141,18 @@ class _AdminProfileState extends State<AdminProfile> {
                         'MOBILE NUMBER',
                         style: CTextTheme.greyTextTheme.headlineLarge,
                       ),
-                      //TODO: Put mobile number here
                       title: Text(
-                        '+60 14-906 0912',
+                        adminDetails['phoneNumber'].toString(),
                         style: CTextTheme.blackTextTheme.headlineLarge,
                       ),
                     ),
                     ListTile(
                       leading: Text(
-                        'USERNAME',
+                        'ADMIN USERNAME',
                         style: CTextTheme.greyTextTheme.headlineLarge,
                       ),
-                      //TODO: Put username / email here
                       title: Text(
-                        'aaravpatel@gmail.com',
+                        adminDetails['email'] ?? 'Loading...',
                         style: CTextTheme.blackTextTheme.headlineLarge,
                       ),
                     ),
@@ -166,7 +184,6 @@ class _AdminProfileState extends State<AdminProfile> {
                           ),
                         ),
                       ),
-                      // trailing: IconButton(onPressed: (){}, icon: Icon(Icons.edit_outlined, color: AppColors.cGreyColor2,)),
                     ),
                   ],
                 ),

@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:washcubes_admindashboard/config.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
 import 'package:washcubes_admindashboard/src/constants/image_strings.dart';
@@ -63,9 +65,14 @@ class _OperatorLoginPageState extends State<OperatorLoginPage> {
     });
     var jsonResponse = jsonDecode(response.body);
     if (jsonResponse['status'] == true) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', jsonResponse['token']);
+      String token = prefs.getString('token') ?? '';
+      Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(token);
+      var profilePicUrl = jwtDecodedToken["profilePicUrl"];
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const OperatorDashboard()), 
+        MaterialPageRoute(builder: (context) => OperatorDashboard(profilePicUrl: profilePicUrl)), 
         (route) => false
       );
     } else if (jsonResponse!['status'] == false) {

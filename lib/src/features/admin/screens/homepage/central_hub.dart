@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:washcubes_admindashboard/src/common_widgets/top_nav.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/top_nav/top_nav.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
-import 'package:washcubes_admindashboard/src/features/admin/screens/dashboard/admin_dashboard.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/feedback_list/feedback_list.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/lockers/locker.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/login/admin_login_page.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/operators/operator.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/orders/order_data.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/riders/rider.dart';
-import 'package:washcubes_admindashboard/src/features/admin/screens/services/service.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 
 class CentralHub extends StatefulWidget {
-  const CentralHub({super.key});
+  final String profilePicUrl;
+  const CentralHub({super.key, required this.profilePicUrl});
 
   @override
   State<CentralHub> createState() => _CentralHubState();
@@ -27,7 +26,7 @@ class _CentralHubState extends State<CentralHub> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      appBar: topNavigationBar(context, scaffoldKey),
+      appBar: topNavigationBar(context, scaffoldKey, widget.profilePicUrl),
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

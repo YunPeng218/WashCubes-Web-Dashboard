@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:washcubes_admindashboard/config.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
 import 'package:washcubes_admindashboard/src/constants/image_strings.dart';
@@ -9,6 +10,7 @@ import 'package:washcubes_admindashboard/src/features/admin/screens/homepage/cen
 import 'package:washcubes_admindashboard/src/features/operator/screens/login/operator_login_page.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminLoginPage extends StatefulWidget {
   const AdminLoginPage({super.key});
@@ -63,9 +65,14 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
     });
     var jsonResponse = jsonDecode(response.body);
     if (jsonResponse['status'] == true) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', jsonResponse['token']);
+      String token = prefs.getString('token') ?? '';
+      Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(token);
+      var profilePicUrl = jwtDecodedToken["profilePicUrl"];
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const CentralHub()), 
+        MaterialPageRoute(builder: (context) => CentralHub(profilePicUrl: profilePicUrl)), 
         (route) => false
       );
     } else if (jsonResponse!['status'] == false) {

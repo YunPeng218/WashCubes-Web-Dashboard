@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:washcubes_admindashboard/src/common_widgets/password_reset.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:washcubes_admindashboard/config.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
-import 'package:washcubes_admindashboard/src/constants/image_strings.dart';
 import 'package:washcubes_admindashboard/src/constants/sizes.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
+import 'package:http/http.dart' as http;
 
 class OperatorProfile extends StatefulWidget {
   const OperatorProfile({super.key});
@@ -13,6 +17,36 @@ class OperatorProfile extends StatefulWidget {
 }
 
 class _OperatorProfileState extends State<OperatorProfile> {
+  Map<String, dynamic> operatorDetails = {};
+
+  @override
+  void initState() {
+    super.initState();
+    getOperatorDetails();
+  }
+
+  void getOperatorDetails() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString('token') ?? '';
+      Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(token);
+      var reqUrl = '${url}operator?operatorId=${jwtDecodedToken["_id"]}';
+      final response = await http.get(
+        Uri.parse(reqUrl),
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        setState(() {
+          operatorDetails = data['operator'];
+        });
+      } else {
+        print('Failed to load operator details');
+      }
+    } catch (error) {
+      print('Error fetching operator details: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -40,52 +74,39 @@ class _OperatorProfileState extends State<OperatorProfile> {
                 child: Center(
                   child: Stack(
                     children: <Widget>[
-                      Container(
-                        width: 250,
-                        height: 250,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            width: 4,
-                            color: Theme.of(context).scaffoldBackgroundColor,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              spreadRadius: 2,
-                              blurRadius: 10,
-                              color: Colors.black.withOpacity(0.1),
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage(cRiderPFP),
-                          ),
-                        ),
-                      ),
-                      //Camera PFP Icon
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: GestureDetector(
-                          onTap: () {
-                            // showEditDialog(context);
-                          },
-                          child: Container(
-                            height: 60,
-                            width: 60,
+                      Stack(
+                        children: [
+                          Container(
+                            width: 250,
+                            height: 250,
                             decoration: BoxDecoration(
-                              shape: BoxShape.circle,
                               border: Border.all(
                                 width: 4,
-                                color: AppColors.cGreyColor1,
+                                color: Theme.of(context).scaffoldBackgroundColor,
                               ),
-                              color: AppColors.cGreyColor1,
+                              boxShadow: [
+                                BoxShadow(
+                                  spreadRadius: 2,
+                                  blurRadius: 10,
+                                  color: Colors.black.withOpacity(0.1),
+                                  offset: const Offset(0, 10),
+                                ),
+                              ],
+                              shape: BoxShape.circle,
+                              image: operatorDetails['profilePicURL'] != null
+                                  ? DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage(operatorDetails['profilePicURL']),
+                                    )
+                                  : null,
                             ),
-                            child: const Icon(Icons.camera_alt_rounded, color: AppColors.cBlueColor3, size: 40,),
                           ),
-                        ),
-                      ),
+                          if (operatorDetails['profilePicURL'] == null)
+                            const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                        ],
+                      )
                     ],
                   ),
                 ),
@@ -96,12 +117,11 @@ class _OperatorProfileState extends State<OperatorProfile> {
                   children: [
                     ListTile(
                       leading: Text(
-                        'OPERATOR ID',
+                        'OPERATOR NAME',
                         style: CTextTheme.greyTextTheme.headlineLarge,
                       ),
-                      //TODO: Put ID here
                       title: Text(
-                        '#12345',
+                        operatorDetails['name'] ?? 'Loading...',
                         style: CTextTheme.blackTextTheme.headlineLarge,
                       ),
                     ),
@@ -110,20 +130,8 @@ class _OperatorProfileState extends State<OperatorProfile> {
                         'OPERATOR IC',
                         style: CTextTheme.greyTextTheme.headlineLarge,
                       ),
-                      //TODO: Put IC here
                       title: Text(
-                        '012345-67-8901',
-                        style: CTextTheme.blackTextTheme.headlineLarge,
-                      ),
-                    ),
-                    ListTile(
-                      leading: Text(
-                        'OPERATOR NAME',
-                        style: CTextTheme.greyTextTheme.headlineLarge,
-                      ),
-                      //TODO: Put name here
-                      title: Text(
-                        'Aarav Patel',
+                        operatorDetails['icNumber'] ?? 'Loading...',
                         style: CTextTheme.blackTextTheme.headlineLarge,
                       ),
                     ),
@@ -132,52 +140,20 @@ class _OperatorProfileState extends State<OperatorProfile> {
                         'MOBILE NUMBER',
                         style: CTextTheme.greyTextTheme.headlineLarge,
                       ),
-                      //TODO: Put mobile number here
                       title: Text(
-                        '+60 14-906 0912',
+                        operatorDetails['phoneNumber'].toString(),
                         style: CTextTheme.blackTextTheme.headlineLarge,
                       ),
                     ),
                     ListTile(
                       leading: Text(
-                        'USERNAME',
+                        'OPERATOR USERNAME',
                         style: CTextTheme.greyTextTheme.headlineLarge,
                       ),
-                      //TODO: Put username / email here
                       title: Text(
-                        'aaravpatel@gmail.com',
+                        operatorDetails['email'] ?? 'Loading...',
                         style: CTextTheme.blackTextTheme.headlineLarge,
                       ),
-                    ),
-                    ListTile(
-                      leading: Text(
-                        'PASSWORD',
-                        style: CTextTheme.greyTextTheme.headlineLarge,
-                      ),
-                      title: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context, 
-                            builder: (BuildContext context) {
-                              return const PasswordReset();
-                            },);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(10.0),
-                          decoration: const BoxDecoration(
-                            color: AppColors.cGreyColor2,
-                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                          child: Row(
-                            children: [
-                              Text('hidden',style: CTextTheme.greyTextTheme.headlineLarge,),
-                              const Spacer(),
-                              const Icon(Icons.edit_outlined, color: AppColors.cGreyColor3,)
-                            ],
-                          ),
-                        ),
-                      ),
-                      // trailing: IconButton(onPressed: (){}, icon: Icon(Icons.edit_outlined, color: AppColors.cGreyColor2,)),
                     ),
                   ],
                 ),

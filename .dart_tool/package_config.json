@@ -62,6 +62,12 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "file",
+      "rootUri": "file:///C:/Users/YunPeng/AppData/Local/Pub/Cache/hosted/pub.dev/file-7.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "file_picker",
       "rootUri": "file:///C:/Users/YunPeng/AppData/Local/Pub/Cache/hosted/pub.dev/file_picker-6.2.0",
       "packageUri": "lib/",
@@ -236,6 +242,12 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "jwt_decoder",
+      "rootUri": "file:///C:/Users/YunPeng/AppData/Local/Pub/Cache/hosted/pub.dev/jwt_decoder-2.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "leak_tracker",
       "rootUri": "file:///C:/Users/YunPeng/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker-10.0.0",
       "packageUri": "lib/",
@@ -344,6 +356,48 @@
       "languageVersion": "2.15"
     },
     {
+      "name": "shared_preferences",
+      "rootUri": "file:///C:/Users/YunPeng/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences-2.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "shared_preferences_android",
+      "rootUri": "file:///C:/Users/YunPeng/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_android-2.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "shared_preferences_foundation",
+      "rootUri": "file:///C:/Users/YunPeng/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_foundation-2.3.5",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "shared_preferences_linux",
+      "rootUri": "file:///C:/Users/YunPeng/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_linux-2.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "shared_preferences_platform_interface",
+      "rootUri": "file:///C:/Users/YunPeng/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_platform_interface-2.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "shared_preferences_web",
+      "rootUri": "file:///C:/Users/YunPeng/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_web-2.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "shared_preferences_windows",
+      "rootUri": "file:///C:/Users/YunPeng/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_windows-2.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "skeletons",
       "rootUri": "file:///C:/Users/YunPeng/AppData/Local/Pub/Cache/hosted/pub.dev/skeletons-0.0.3",
       "packageUri": "lib/",
@@ -434,7 +488,7 @@
       "languageVersion": "3.3"
     }
   ],
-  "generated": "2024-03-15T17:20:00.730571Z",
+  "generated": "2024-03-16T13:42:11.909667Z",
   "generator": "pub",
   "generatorVersion": "3.3.1"
 }

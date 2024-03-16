@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-//import 'package:washcubes_admindashboard/src/features/operator/screens/side_menu/operator_side_menu.dart';
-import 'package:washcubes_admindashboard/src/common_widgets/top_nav.dart';
+import 'package:washcubes_admindashboard/src/features/operator/screens/top_nav/top_nav.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
 import 'package:washcubes_admindashboard/src/features/operator/screens/order_list/order_list.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 import 'package:washcubes_admindashboard/src/features/operator/screens/login/operator_login_page.dart';
 
 class OperatorDashboard extends StatefulWidget {
-  const OperatorDashboard({super.key});
+  final String profilePicUrl;
+  const OperatorDashboard({super.key, required this.profilePicUrl});
 
   @override
   State<OperatorDashboard> createState() => _OperatorDashboardState();
@@ -21,7 +21,7 @@ class _OperatorDashboardState extends State<OperatorDashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      appBar: topNavigationBar(context, scaffoldKey),
+      appBar: topNavigationBar(context, scaffoldKey, widget.profilePicUrl),
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

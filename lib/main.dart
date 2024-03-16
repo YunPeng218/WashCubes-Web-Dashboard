@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/homepage/central_hub.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/login/admin_login_page.dart';
 import 'package:washcubes_admindashboard/src/features/operator/screens/login/operator_login_page.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/theme.dart';
 
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'Operator Website',
       debugShowCheckedModeBanner: false,
       theme: CAppTheme.lightTheme,
-      home: const OperatorLoginPage(),
+      home: const AdminLoginPage(),
     );
   }
 }
