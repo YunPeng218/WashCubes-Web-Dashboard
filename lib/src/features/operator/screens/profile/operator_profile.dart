@@ -8,6 +8,7 @@ import 'package:washcubes_admindashboard/src/constants/colors.dart';
 import 'package:washcubes_admindashboard/src/constants/sizes.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 import 'package:http/http.dart' as http;
+import 'package:washcubes_admindashboard/src/features/operator/screens/password_reset/password_reset.dart';
 
 class OperatorProfile extends StatefulWidget {
   const OperatorProfile({super.key});
@@ -153,6 +154,35 @@ class _OperatorProfileState extends State<OperatorProfile> {
                       title: Text(
                         operatorDetails['email'] ?? 'Loading...',
                         style: CTextTheme.blackTextTheme.headlineLarge,
+                      ),
+                    ),
+                    ListTile(
+                      leading: Text(
+                        'PASSWORD',
+                        style: CTextTheme.greyTextTheme.headlineLarge,
+                      ),
+                      title: GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context, 
+                            builder: (BuildContext context) {
+                              return const PasswordReset();
+                            },);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(10.0),
+                          decoration: const BoxDecoration(
+                            color: AppColors.cGreyColor2,
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          ),
+                          child: Row(
+                            children: [
+                              Text('hidden',style: CTextTheme.greyTextTheme.headlineLarge,),
+                              const Spacer(),
+                              const Icon(Icons.edit_outlined, color: AppColors.cGreyColor3,)
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ],
