@@ -148,7 +148,7 @@ class _AdminProfileState extends State<AdminProfile> {
                     ),
                     ListTile(
                       leading: Text(
-                        'ADMIN USERNAME',
+                        'ADMIN EMAIL',
                         style: CTextTheme.greyTextTheme.headlineLarge,
                       ),
                       title: Text(

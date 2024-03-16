@@ -47,7 +47,7 @@ class _FeedbackDetailsState extends State<FeedbackDetails> {
               children: [
                 Expanded(
                   child: ListTile(
-                    leading: Text('USERNAME', style: CTextTheme.greyTextTheme.headlineLarge,),
+                    leading: Text('USER PHONE NUMBER', style: CTextTheme.greyTextTheme.headlineLarge,),
                     title: Text(widget.feedback.user!.phoneNumber.toString(), style: CTextTheme.blackTextTheme.headlineLarge,),
                   )
                 ),

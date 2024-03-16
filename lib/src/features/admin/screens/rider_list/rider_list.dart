@@ -1,34 +1,34 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:washcubes_admindashboard/config.dart';
-import 'package:washcubes_admindashboard/src/constants/colors.dart';
-import 'package:washcubes_admindashboard/src/features/admin/screens/feedback_list/feedback_details.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/rider_list/rider_details.dart';
+import 'package:washcubes_admindashboard/src/models/rider.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
+import 'package:washcubes_admindashboard/src/constants/colors.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/rider_list/add_rider.dart';
 import 'package:http/http.dart' as http;
-import 'package:washcubes_admindashboard/src/models/feedback.dart';
 
-class FeedbackTable extends StatefulWidget {
-  const FeedbackTable({super.key});
+class RiderTable extends StatefulWidget {
+  const RiderTable({super.key});
 
   @override
-  State<FeedbackTable> createState() => _FeedbackTableState();
+  State<RiderTable> createState() => _RiderTableState();
 }
 
-class _FeedbackTableState extends State<FeedbackTable> {
-  List<Feedbacks> feedbacks = [];
+class _RiderTableState extends State<RiderTable> {
+  List<Rider> riders = [];
 
   @override
   void initState() {
     super.initState();
-    fetchFeedbacks();
+    fetchRidersDetails();
   }
 
-  Future<void> fetchFeedbacks() async {
+  Future<void> fetchRidersDetails() async {
     try {
       final response = await http.get(
-        Uri.parse('${url}admin/fetchFeedback'),
+        Uri.parse('${url}admin/fetchRiders'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -36,12 +36,12 @@ class _FeedbackTableState extends State<FeedbackTable> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
-        if (data.containsKey('feedbacks')) {
-          final List<dynamic> feedbackData = data['feedbacks'];
-          final List<Feedbacks> fetchedFeedbacks =
-              feedbackData.map((feedback) => Feedbacks.fromJson(feedback)).toList();
+        if (data.containsKey('riders')) {
+          final List<dynamic> riderData = data['riders'];
+          final List<Rider> fetchedRiders =
+              riderData.map((rider) => Rider.fromJson(rider)).toList();
           setState(() {
-            feedbacks = fetchedFeedbacks;
+            riders = fetchedRiders;
           });
         } else {
           print('Response data does not contain services.');
@@ -51,7 +51,7 @@ class _FeedbackTableState extends State<FeedbackTable> {
         print('Error message: ${response.body}');
       }
     } catch (error) {
-      print('Error Fetching Feedbacks: $error');
+      print('Error Fetching Riders Details: $error');
     }
   }
 
@@ -64,17 +64,17 @@ class _FeedbackTableState extends State<FeedbackTable> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
                   Text(
-                    'FeedbackList',
+                    'Rider Data',
                     style: CTextTheme.blackTextTheme.displayLarge,
                   ),
                   IconButton(
                     onPressed: () async {
-                      await fetchFeedbacks();
+                      await fetchRidersDetails();
                     },
                     icon: const Icon(
                       Icons.refresh_rounded,
@@ -83,12 +83,41 @@ class _FeedbackTableState extends State<FeedbackTable> {
                   )
                 ],
               ),
+              //Add rider button
+              ElevatedButton(
+                onPressed: (){
+                  showDialog(
+                    context: context, 
+                    builder: (BuildContext context) {
+                      return const AddRider();
+                    },);
+                }, 
+                child: Text('Add New Rider', style: CTextTheme.blackTextTheme.headlineMedium,)
+              )
             ],
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: SizedBox(
+            height: 40.0,
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Search by Rider Name...',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+              onChanged: (value) {
+                //TODO: Handle search functionality
+              },
+            ),
+          ),
+        ),
         Flexible(
-          child: FeedbackList(
-            feedbacks: feedbacks,
+          child: RiderList(
+            riders: riders,
           ),
         ),
       ],
@@ -96,11 +125,10 @@ class _FeedbackTableState extends State<FeedbackTable> {
   }
 }
 
-// ignore: must_be_immutable
-class FeedbackList extends StatelessWidget {
-  List<Feedbacks> feedbacks = [];
+class RiderList extends StatelessWidget {
+  List<Rider> riders = [];
 
-  FeedbackList({super.key, required this.feedbacks});
+  RiderList({super.key, required this.riders});
 
   @override
   Widget build(BuildContext context) {
@@ -108,84 +136,47 @@ class FeedbackList extends StatelessWidget {
     return Column(
       children: [
         DataTable(
-          columnSpacing: screenWidth * 0.06,
+          columnSpacing: screenWidth * 0.08,
           columns: [
             DataColumn(
                 label: Text(
-              'FEEDBACK ID',
+              'RIDER NAME',
               style: CTextTheme.greyTextTheme.headlineMedium,
             )),
             DataColumn(
                 label: Text(
-              'USER PHONE NUMBER',
+              'EMAIL',
               style: CTextTheme.greyTextTheme.headlineMedium,
             )),
             DataColumn(
                 label: Text(
-              'IMPROVEMENT CATEGORIES',
-              style: CTextTheme.greyTextTheme.headlineMedium,
-            )),
-            DataColumn(
-                label: Text(
-              'DATE RECEIVED',
-              style: CTextTheme.greyTextTheme.headlineMedium,
-            )),
-            DataColumn(
-                label: Text(
-              'RATING',
+              'PHONE NUMBER',
               style: CTextTheme.greyTextTheme.headlineMedium,
             )),
             const DataColumn(label: Text('')),
           ],
-          rows: feedbacks
+          rows: riders
               .map(
-                (feedback) => DataRow(cells: [
+                (rider) => DataRow(cells: [
                   DataCell(Text(
-                    feedback.feedbackID,
+                    rider.name,
                     style: CTextTheme.blackTextTheme.headlineMedium,
                   )),
                   DataCell(Text(
-                    feedback.user?.phoneNumber.toString() ?? 'Loading...',
+                    rider.email,
                     style: CTextTheme.blackTextTheme.headlineMedium,
                   )),
-                  DataCell(SizedBox(
-                      width: 200,
-                      child: Text(
-                        feedback.improvementCategories.toString().replaceAll('[', '').replaceAll(']', ''),
-                        style: CTextTheme.blackTextTheme.headlineMedium,
-                        overflow: TextOverflow.ellipsis, 
-                        maxLines: 2,
-                      ))),
-                  DataCell(SizedBox(
-                      width: 80,
-                      child: Text(
-                        feedback.getFormattedDateTime(feedback.receivedAt),
-                        style: CTextTheme.blackTextTheme.headlineMedium,
-                      ))),
-                  DataCell(
-                    RatingBar.builder(
-                      initialRating: feedback.starRating,
-                      minRating: 0.5,
-                      direction: Axis.horizontal,
-                      allowHalfRating: true,
-                      itemCount: 5,
-                      itemSize: 30,
-                      itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
-                      itemBuilder: (context, _) => const Icon(
-                        Icons.star,
-                        color: AppColors.cBlueColor2,
-                      ),
-                      onRatingUpdate: (rating) {},
-                      ignoreGestures: true,
-                    ),
-                  ),
+                  DataCell(Text(
+                    rider.phoneNumber.toString(),
+                    style: CTextTheme.blackTextTheme.headlineMedium,
+                  )),
                   DataCell(
                     ElevatedButton(
                       onPressed: () {
                         showDialog(
                           context: context, 
                           builder: (BuildContext context) {
-                            return FeedbackDetails(feedback: feedback);
+                            return RiderDetails(rider: rider);
                           },);
                       },
                       child: Text(
@@ -216,7 +207,6 @@ class FeedbackList extends StatelessWidget {
                   child: const Icon(Icons.arrow_back),
                 ),
               ),
-
               const SizedBox(width: 16), // Adjust spacing as needed
               Text(
                 'Page 1 of 5', // Replace with actual page number
@@ -241,4 +231,16 @@ class FeedbackList extends StatelessWidget {
       ],
     );
   }
+}
+
+class RiderDataRow {
+  final String riderId;
+  final String riderName;
+  final String riderEmail;
+
+  RiderDataRow({
+    required this.riderId,
+    required this.riderName,
+    required this.riderEmail,
+  });
 }

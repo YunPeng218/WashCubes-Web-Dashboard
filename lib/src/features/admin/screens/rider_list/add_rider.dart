@@ -1,8 +1,15 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:washcubes_admindashboard/config.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
 import 'package:washcubes_admindashboard/src/constants/image_strings.dart';
 import 'package:washcubes_admindashboard/src/constants/sizes.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
+import 'package:http/http.dart' as http;
 
 class AddRider extends StatefulWidget {
   const AddRider({super.key});
@@ -25,6 +32,9 @@ class _AddRiderState extends State<AddRider> {
   final TextEditingController _mobileNumberController = TextEditingController();
   bool isNotValidateMobileNumber = false;
   String errorTextMobileNumber = '';
+  Uint8List? fileBytes;
+  String fileName = '';
+  String imageUrl = '';
 
   // Validation Function
   void validateInputs() async {
@@ -37,7 +47,7 @@ class _AddRiderState extends State<AddRider> {
       return;
     }
     // Mobile Number Validation
-    RegExp mobileNumberPattern = RegExp(r'^\+60 1[0-9]-\d{7,8}$');
+    RegExp mobileNumberPattern = RegExp(r'^(601)[0-46-9][0-9]{7,8}$');
     if (_mobileNumberController.text.isEmpty) {
       setState(() {
         errorTextMobileNumber = 'Please Enter Rider Mobile Number.';
@@ -74,6 +84,145 @@ class _AddRiderState extends State<AddRider> {
         isNotValidatePassword = true;
       });
       return;
+    }
+
+    if (!isNotValidateName && !isNotValidateMobileNumber && !isNotValidateEmail && !isNotValidatePassword) {
+      registerRider();
+    }
+  }
+
+  Future<void> selectImage() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'jpeg', 'png'],
+    );
+    if (result != null && result.files.isNotEmpty) {
+      PlatformFile file = result.files.first;
+      fileName = result.files.first.name;
+      fileBytes = file.bytes!;
+      uploadImage();
+    }
+  }
+
+  Future<void> uploadImage() async {
+    try {
+      final url =
+          Uri.parse('https://api.cloudinary.com/v1_1/ddweldfmx/upload');
+      final request = http.MultipartRequest('POST', url)
+        ..fields['upload_preset'] = 'xcbbr3ok'
+        ..files.add(
+          http.MultipartFile.fromBytes(
+            'file',
+            fileBytes!,
+            filename: fileName,
+          ),
+        );
+      final response = await request.send();
+      if (response.statusCode == 200) {
+        final responseData = await response.stream.toBytes();
+        final responseString = utf8.decode(responseData);
+        final jsonMap = jsonDecode(responseString);
+        final url = jsonMap['url'];
+        setState(() {
+          imageUrl = url;
+        });
+      }
+    } catch (error) {
+      print('Error uploading image: $error');
+    }
+  }
+
+  void registerRider() async {
+    var reqUrl = '${url}registerRider';
+    try {
+      Map<String, dynamic> requestBody = {
+        'email': _emailController.text,
+        'password': _passwordController.text,
+        'phoneNumber': _mobileNumberController.text,
+        'name': _nameController.text,
+      };
+      if (imageUrl != '') {
+        requestBody['profilePicURL'] = imageUrl;
+      }
+      final response = await http.post(
+        Uri.parse(reqUrl),
+        body: (requestBody),
+      );
+
+      if (response.statusCode == 200) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                'Success',
+                textAlign: TextAlign.center,
+                style: CTextTheme.blackTextTheme.headlineLarge
+              ),
+              content: Text(
+                'Rider has been added successfully.',
+                textAlign: TextAlign.center,
+                style: CTextTheme.blackTextTheme.headlineSmall,
+              ),
+              actions: <Widget>[
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              'OK',
+                              style: CTextTheme.blackTextTheme.headlineSmall,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+              ],
+            );
+          },
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                'Error',
+                textAlign: TextAlign.center,
+                style: CTextTheme.blackTextTheme.headlineLarge
+              ),
+              content: Text(
+                'Rider with the same email or phone number is already exist. Please try with another email or phone number.',
+                textAlign: TextAlign.center,
+                style: CTextTheme.blackTextTheme.headlineSmall,
+              ),
+              actions: <Widget>[
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              'OK',
+                              style: CTextTheme.blackTextTheme.headlineSmall,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+              ],
+            );
+          },
+        );
+        }
+    } catch (error) {
+      print('Error registering user: $error');
     }
   }
 
@@ -121,7 +270,9 @@ class _AddRiderState extends State<AddRider> {
                         shape: BoxShape.circle,
                         image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: AssetImage(cRiderPFP),
+                          image: imageUrl.isEmpty
+                            ? const AssetImage(cRiderPFP) as ImageProvider
+                            : NetworkImage(imageUrl),
                         ),
                       ),
                     ),
@@ -131,7 +282,7 @@ class _AddRiderState extends State<AddRider> {
                       right: 0,
                       child: GestureDetector(
                         onTap: () {
-                          // showEditDialog(context);
+                          selectImage();
                         },
                         child: Container(
                           height: 40,
@@ -158,10 +309,6 @@ class _AddRiderState extends State<AddRider> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ListTile(
-                    leading: Text('RIDER ID', style: CTextTheme.greyTextTheme.headlineLarge,),
-                    title: Text('#4318943857', style: CTextTheme.blackTextTheme.headlineLarge,),
-                  ),
-                  ListTile(
                     leading: Text('RIDER NAME', style: CTextTheme.greyTextTheme.headlineLarge,),
                     title: TextField(
                       controller: _nameController,
@@ -176,7 +323,7 @@ class _AddRiderState extends State<AddRider> {
                     title: TextField(
                       controller: _mobileNumberController,
                       decoration: InputDecoration(
-                        hintText: '+60 14-906 0912',
+                        hintText: '60123456789',
                         errorText: isNotValidateMobileNumber ? errorTextMobileNumber : null,
                       ),
                     ),
@@ -200,11 +347,6 @@ class _AddRiderState extends State<AddRider> {
                         hintText: 'Password',
                         suffixIcon: GestureDetector(
                           onTap: () {
-                            setState(() {
-                              _isObscure = !_isObscure;
-                            });
-                          },
-                          onLongPressEnd: (_) {
                             setState(() {
                               _isObscure = !_isObscure;
                             });

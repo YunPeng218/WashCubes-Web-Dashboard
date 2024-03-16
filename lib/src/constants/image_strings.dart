@@ -10,7 +10,7 @@ const String cAppLogo = "assets/logos/i3Cubes_logo.png";
 // const String cMap03 = "assets/images/map03.png";
 
 // //Rider ID Verification
-const String cRiderPFP = 'assets/images/profile_picture.png';
+const String cRiderPFP = 'assets/images/profile_picture.jpg';
 // const String cQRCode = 'assets/images/qr_code.png';
 
 // // Pickup / Dropoff Images

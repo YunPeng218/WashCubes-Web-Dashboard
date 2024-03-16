@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/rider_list/rider_list.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/top_nav/top_nav.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/feedback_list/feedback_list.dart';
@@ -6,7 +7,6 @@ import 'package:washcubes_admindashboard/src/features/admin/screens/lockers/lock
 import 'package:washcubes_admindashboard/src/features/admin/screens/login/admin_login_page.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/operators/operator.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/orders/order_data.dart';
-import 'package:washcubes_admindashboard/src/features/admin/screens/riders/rider.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 
 class CentralHub extends StatefulWidget {
@@ -59,7 +59,7 @@ class _CentralHubState extends State<CentralHub> {
       case 'Lockers':
         return LockerPage();
       case 'Riders':
-        return RiderData();
+        return RiderTable();
       case 'Operators':
         return OperatorData();
       case 'Feedback':

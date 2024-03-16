@@ -134,16 +134,33 @@ class _PasswordResetState extends State<PasswordReset> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Success'),
-            content: const Text('Password updated successfully.'),
+            title: Text(
+              'Success',
+              textAlign: TextAlign.center,
+              style: CTextTheme.blackTextTheme.headlineLarge
+            ),
+            content: Text(
+              'Password updated successfully.',
+              textAlign: TextAlign.center,
+              style: CTextTheme.blackTextTheme.headlineSmall,
+            ),
             actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            'OK',
+                            style: CTextTheme.blackTextTheme.headlineSmall,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
             ],
           );
         },
@@ -153,15 +170,32 @@ class _PasswordResetState extends State<PasswordReset> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Error'),
-            content: const Text('The old password entered is incorrect. Please try again.'),
+            title: Text(
+              'Error',
+              textAlign: TextAlign.center,
+              style: CTextTheme.blackTextTheme.headlineLarge
+            ),
+            content: Text(
+              'The old password entered is incorrect. Please try again.',
+              textAlign: TextAlign.center,
+              style: CTextTheme.blackTextTheme.headlineSmall,
+            ),
             actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            'OK',
+                            style: CTextTheme.blackTextTheme.headlineSmall,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
             ],
           );
         },
