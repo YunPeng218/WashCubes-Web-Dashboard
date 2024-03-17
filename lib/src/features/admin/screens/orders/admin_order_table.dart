@@ -1,6 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/orders/admin_order_details.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:washcubes_admindashboard/config.dart';
+import 'package:washcubes_admindashboard/src/models/order.dart';
+import 'package:washcubes_admindashboard/src/models/service.dart';
+import 'package:washcubes_admindashboard/src/models/locker.dart';
 
 class AdminOrderTable extends StatefulWidget {
   const AdminOrderTable({super.key});
@@ -10,94 +18,102 @@ class AdminOrderTable extends StatefulWidget {
 }
 
 class _AdminOrderTableState extends State<AdminOrderTable> {
+  List<Order> orders = [];
+  List<Order> allOrders = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchOrders();
+  }
+
+  Future<void> fetchOrders() async {
+    try {
+      final response = await http.get(
+        Uri.parse('${url}orders'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        //print(response.body)
+        final Map<String, dynamic> data = json.decode(response.body);
+        //print(data);
+        if (data.containsKey('orders')) {
+          final List<dynamic> orderData = data['orders'];
+          final List<Order> fetchedOrders =
+              orderData.map((order) => Order.fromJson(order)).toList();
+          print(fetchedOrders);
+          setState(() {
+            orders = fetchedOrders;
+            allOrders = fetchedOrders;
+          });
+        } else {
+          print('Response data does not contain services.');
+        }
+      } else {
+        print('Error: ${response.statusCode}');
+        print('Error message: ${response.body}');
+      }
+    } catch (error) {
+      print('Error Fetching Orders: $error');
+    }
+  }
+
+  Future<String> getServiceName(String serviceId) async {
+    String serviceName = 'Loading...';
+    try {
+      final response = await http.get(Uri.parse('${url}services/$serviceId'),
+          headers: {'Content-Type': 'application/json'});
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        if (data.containsKey('service')) {
+          final dynamic serviceData = data['service'];
+          final Service service = Service.fromJson(serviceData);
+          serviceName = service.name;
+        }
+      }
+    } catch (error) {
+      print('Error Fetching Service Name: $error');
+    }
+    return serviceName;
+  }
+
+  Future<String> getLockerSiteDetails(String lockerSiteId) async {
+    String dropOffLocation = 'Loading...';
+    try {
+      final response = await http.get(
+          Uri.parse('${url}lockers?lockerSiteId=$lockerSiteId'),
+          headers: {'Content-Type': 'application/json'});
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        if (data.containsKey('locker')) {
+          final dynamic lockerData = data['locker'];
+          final LockerSite lockerSite = LockerSite.fromJson(lockerData);
+          dropOffLocation = lockerSite.name;
+        }
+      }
+    } catch (error) {
+      print('Error Fetching Drop Off Location: $error');
+    }
+    return dropOffLocation;
+  }
+
+  List<Order> filterOrdersByQuery(List<Order> orders, String? query) {
+    if (query == null) {
+      return orders;
+    }
+    return orders
+        .where((orders) => orders.orderNumber.contains(query))
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-
-    //TODO: Replace with actual order data
-    final List<OrderDataRow> orders = [
-      OrderDataRow(
-        dateTime: '23 Nov 2023, 11:59', 
-        orderId: '#12345', 
-        itemId: '-', 
-        serviceType: 'WashCubes', 
-        orderPrice: 'RM 30.00', 
-        orderLocation: "Taylor's University", 
-        orderStatus: 'Reserved'
-      ),
-      OrderDataRow(
-        dateTime: '23 Nov 2023, 11:59', 
-        orderId: '#12345', 
-        itemId: '-', 
-        serviceType: 'WashCubes', 
-        orderPrice: 'RM 30.00', 
-        orderLocation: "Taylor's University", 
-        orderStatus: 'Received'
-      ),
-      OrderDataRow(
-        dateTime: '23 Nov 2023, 11:59', 
-        orderId: '#12345', 
-        itemId: '#12232458899', 
-        serviceType: 'WashCubes', 
-        orderPrice: 'RM 30.00', 
-        orderLocation: "Taylor's University", 
-        orderStatus: 'Collected'
-      ),
-      OrderDataRow(
-        dateTime: '23 Nov 2023, 11:59', 
-        orderId: '#12345', 
-        itemId: '#12232458899', 
-        serviceType: 'WashCubes', 
-        orderPrice: 'RM 30.00', 
-        orderLocation: "Taylor's University", 
-        orderStatus: 'Process'
-      ),
-      OrderDataRow(
-        dateTime: '23 Nov 2023, 11:59', 
-        orderId: '#12345', 
-        itemId: '#12232458899', 
-        serviceType: 'WashCubes', 
-        orderPrice: 'RM 30.00', 
-        orderLocation: "Taylor's University", 
-        orderStatus: 'Error'
-      ),
-      OrderDataRow(
-        dateTime: '23 Nov 2023, 11:59', 
-        orderId: '#12345', 
-        itemId: '#12232458899', 
-        serviceType: 'WashCubes', 
-        orderPrice: 'RM 30.00', 
-        orderLocation: "Taylor's University", 
-        orderStatus: 'Ready'
-      ),
-      OrderDataRow(
-        dateTime: '23 Nov 2023, 11:59', 
-        orderId: '#12345', 
-        itemId: '#12232458899', 
-        serviceType: 'WashCubes', 
-        orderPrice: 'RM 30.00', 
-        orderLocation: "Taylor's University", 
-        orderStatus: 'Returned'
-      ),
-      OrderDataRow(
-        dateTime: '23 Nov 2023, 11:59', 
-        orderId: '#12345', 
-        itemId: '#12232458899', 
-        serviceType: 'WashCubes', 
-        orderPrice: 'RM 30.00', 
-        orderLocation: "Taylor's University", 
-        orderStatus: 'Ready For Collect'
-      ),
-      OrderDataRow(
-        dateTime: '23 Nov 2023, 11:59', 
-        orderId: '#12345', 
-        itemId: '#12232458899', 
-        serviceType: 'WashCubes', 
-        orderPrice: 'RM 30.00', 
-        orderLocation: "Taylor's University", 
-        orderStatus: 'Completed'
-      ),
-    ];
 
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
@@ -111,27 +127,27 @@ class _AdminOrderTableState extends State<AdminOrderTable> {
           )),
           DataColumn(
               label: Text(
-            'ORDER ID',
+            'ORDER NO.',
             style: CTextTheme.greyTextTheme.headlineMedium,
           )),
           DataColumn(
               label: Text(
-            'ITEM ID',
+            'SERVICE',
             style: CTextTheme.greyTextTheme.headlineMedium,
           )),
           DataColumn(
               label: Text(
-            'SERVICE TYPE',
+            'EST/FINAL PRICE',
             style: CTextTheme.greyTextTheme.headlineMedium,
           )),
           DataColumn(
               label: Text(
-            'ORDER PRICE',
+            'DROP-OFF',
             style: CTextTheme.greyTextTheme.headlineMedium,
           )),
           DataColumn(
               label: Text(
-            'LOCATION',
+            'PICKUP',
             style: CTextTheme.greyTextTheme.headlineMedium,
           )),
           DataColumn(
@@ -145,41 +161,98 @@ class _AdminOrderTableState extends State<AdminOrderTable> {
             .map(
               (order) => DataRow(cells: [
                 DataCell(Text(
-                  order.dateTime,
+                  order.getFormattedDateTime(order.createdAt),
                   style: CTextTheme.blackTextTheme.headlineMedium,
                 )),
                 DataCell(Text(
-                  order.orderId,
+                  order.orderNumber,
                   style: CTextTheme.blackTextTheme.headlineMedium,
                 )),
+                DataCell(
+                  FutureBuilder<String>(
+                    future: getServiceName(order.serviceId),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Text('Loading...');
+                      } else if (snapshot.hasError) {
+                        return const Text('Error');
+                      } else {
+                        return Text(
+                          snapshot.data ?? 'Service Name Not Available',
+                          style: CTextTheme.blackTextTheme.headlineMedium,
+                        );
+                      }
+                    },
+                  ),
+                ),
                 DataCell(Text(
-                  order.itemId,
+                  order.finalPrice == 0.0
+                      ? 'RM${order.estimatedPrice.toStringAsFixed(2)}'
+                      : 'RM${order.finalPrice!.toStringAsFixed(2)}',
                   style: CTextTheme.blackTextTheme.headlineMedium,
                 )),
+                DataCell(
+                  FutureBuilder<String>(
+                    future:
+                        getLockerSiteDetails(order.lockerDetails!.lockerSiteId),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Text('Loading...');
+                      } else if (snapshot.hasError) {
+                        return const Text('Error');
+                      } else {
+                        return Text(
+                          snapshot.data ?? 'Service Name Not Available',
+                          style: CTextTheme.blackTextTheme.headlineMedium,
+                        );
+                      }
+                    },
+                  ),
+                ),
+                DataCell(
+                  FutureBuilder<String>(
+                    future: getLockerSiteDetails(
+                        order.collectionSite!.lockerSiteId),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Text('Loading...');
+                      } else if (snapshot.hasError) {
+                        return const Text('Error');
+                      } else {
+                        return Text(
+                          snapshot.data ?? 'Service Name Not Available',
+                          style: CTextTheme.blackTextTheme.headlineMedium,
+                        );
+                      }
+                    },
+                  ),
+                ),
                 DataCell(Text(
-                  order.serviceType,
-                  style: CTextTheme.blackTextTheme.headlineMedium,
-                )),
-                DataCell(Text(
-                  order.orderPrice,
-                  style: CTextTheme.blackTextTheme.headlineMedium,
-                )),
-                DataCell(Text(
-                  order.orderLocation,
-                  style: CTextTheme.blackTextTheme.headlineMedium,
-                )),
-                DataCell(Text(
-                  order.orderStatus,
-                  style: CTextTheme.blackTextTheme.headlineMedium?.copyWith(color: _getStatusColor(order.orderStatus)),
+                  order.orderStage!.getMostRecentStatus(),
+                  style: CTextTheme.blackTextTheme.headlineMedium?.copyWith(
+                      color: _getStatusColor(
+                          order.orderStage!.getMostRecentStatus())),
                 )),
                 DataCell(
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      String serviceName =
+                          await getServiceName(order.serviceId);
+                      String dropOffLocation = await getLockerSiteDetails(
+                          order.lockerDetails!.lockerSiteId);
+                      String pickupLocation = await getLockerSiteDetails(
+                          order.collectionSite!.lockerSiteId);
                       showDialog(
-                        context: context, 
+                        context: context,
                         builder: (BuildContext context) {
-                          return const AdminOrderDetails();
-                        },);
+                          return AdminOrderDetails(
+                            order: order,
+                            serviceName: serviceName,
+                            dropOffLocation: dropOffLocation,
+                            pickupLocation: pickupLocation,
+                          );
+                        },
+                      );
                     },
                     child: Text(
                       'Check',
@@ -193,49 +266,30 @@ class _AdminOrderTableState extends State<AdminOrderTable> {
       ),
     );
   }
+
   // Function to determine status color
   Color _getStatusColor(String orderStatus) {
     switch (orderStatus) {
-      case 'Reserved':
-        return Colors.grey;
-      case 'Received':
-        return Colors.green;
-      case 'Collected':
-        return Colors.green;
-      case 'Process':
-        return Colors.orange;
-      case 'Error':
-        return Colors.red;
-      case 'Ready':
-        return Colors.green;
-      case 'Returned':
-        return Colors.blue;
-      case 'Ready For Collect':
-        return Colors.blue;
       case 'Completed':
+        return Colors.green;
+      case 'Ready For Collection':
         return Colors.blue;
+      case 'Out For Delivery':
+        return Colors.blue;
+      case 'Processing Return':
+        return Colors.red;
+      case 'Order Error':
+        return Colors.red;
+      case 'Processing Complete':
+        return Colors.blue;
+      case 'In Progress':
+        return Colors.orange;
+      case 'Collected By Rider':
+        return Colors.orange;
+      case 'Drop Off':
+        return Colors.grey;
       default:
         return Colors.grey;
     }
   }
-}
-
-class OrderDataRow {
-  final String dateTime;
-  final String orderId;
-  final String itemId;
-  final String serviceType;
-  final String orderPrice;
-  final String orderLocation;
-  final String orderStatus;
-
-  OrderDataRow({
-    required this.dateTime,
-    required this.orderId,
-    required this.itemId,
-    required this.serviceType,
-    required this.orderPrice,
-    required this.orderLocation,
-    required this.orderStatus,
-  });
 }

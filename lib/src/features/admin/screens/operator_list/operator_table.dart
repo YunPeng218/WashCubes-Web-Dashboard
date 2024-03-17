@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -38,8 +40,9 @@ class _OperatorTableState extends State<OperatorTable> {
         final Map<String, dynamic> data = json.decode(response.body);
         if (data.containsKey('operators')) {
           final List<dynamic> operatorData = data['operators'];
-          final List<Operator> fetchedOperators =
-              operatorData.map((operator) => Operator.fromJson(operator)).toList();
+          final List<Operator> fetchedOperators = operatorData
+              .map((operator) => Operator.fromJson(operator))
+              .toList();
           setState(() {
             operators = fetchedOperators;
           });
@@ -85,15 +88,18 @@ class _OperatorTableState extends State<OperatorTable> {
               ),
               //Add operator button
               ElevatedButton(
-                onPressed: (){
-                  showDialog(
-                    context: context, 
-                    builder: (BuildContext context) {
-                      return const AddOperator();
-                    },);
-                }, 
-                child: Text('Add New Operator', style: CTextTheme.blackTextTheme.headlineMedium,)
-              )
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const AddOperator();
+                      },
+                    );
+                  },
+                  child: Text(
+                    'Add New Operator',
+                    style: CTextTheme.blackTextTheme.headlineMedium,
+                  ))
             ],
           ),
         ),
@@ -174,10 +180,11 @@ class OperatorList extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         showDialog(
-                          context: context, 
+                          context: context,
                           builder: (BuildContext context) {
                             return OperatorDetails(operator: operator);
-                          },);
+                          },
+                        );
                       },
                       child: Text(
                         'Check',

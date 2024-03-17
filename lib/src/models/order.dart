@@ -225,15 +225,46 @@ class OrderStage {
     }
   }
 
+  // String getMostRecentStatus() {
+  //   if (completed.status) {
+  //     return 'Completed';
+  //   }
+  //   if (readyForCollection.status) {
+  //     return 'Ready for Collection';
+  //   }
+  //   if (outForDelivery.status) {
+  //     return 'Out for Delivery';
+  //   }
+  //   if (processingComplete.status) {
+  //     return 'Processing Complete';
+  //   }
+  //   if (inProgress.status) {
+  //     return 'In Progress';
+  //   }
+  //   if (collectedByRider.status) {
+  //     return 'Collected by Rider';
+  //   }
+  //   if (dropOff.status) {
+  //     return 'Drop Off';
+  //   }
+  //   return 'Drop Off Pending';
+  // }
+
   String getMostRecentStatus() {
     if (completed.status) {
       return 'Completed';
     }
     if (readyForCollection.status) {
-      return 'Ready for Collection';
+      return 'Ready For Collection';
     }
     if (outForDelivery.status) {
-      return 'Out for Delivery';
+      return 'Out For Delivery';
+    }
+    if (orderError.status && orderError.userRejected) {
+      return 'Processing Return';
+    }
+    if (orderError.status) {
+      return 'Order Error';
     }
     if (processingComplete.status) {
       return 'Processing Complete';
@@ -242,7 +273,7 @@ class OrderStage {
       return 'In Progress';
     }
     if (collectedByRider.status) {
-      return 'Collected by Rider';
+      return 'Collected By Rider';
     }
     if (dropOff.status) {
       return 'Drop Off';
@@ -354,14 +385,13 @@ class OrderErrorStatus {
   bool userAccepted;
   bool returnProcessed;
 
-  OrderErrorStatus({
-    required this.status,
-    this.dateUpdated,
-    required this.proofPicUrl,
-    required this.userRejected,
-    required this.userAccepted,
-    required this.returnProcessed
-  });
+  OrderErrorStatus(
+      {required this.status,
+      this.dateUpdated,
+      required this.proofPicUrl,
+      required this.userRejected,
+      required this.userAccepted,
+      required this.returnProcessed});
 
   factory OrderErrorStatus.fromJson(Map<String, dynamic> json) {
     return OrderErrorStatus(

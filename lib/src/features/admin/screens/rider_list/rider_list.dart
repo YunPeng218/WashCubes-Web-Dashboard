@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -85,15 +87,18 @@ class _RiderTableState extends State<RiderTable> {
               ),
               //Add rider button
               ElevatedButton(
-                onPressed: (){
-                  showDialog(
-                    context: context, 
-                    builder: (BuildContext context) {
-                      return const AddRider();
-                    },);
-                }, 
-                child: Text('Add New Rider', style: CTextTheme.blackTextTheme.headlineMedium,)
-              )
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const AddRider();
+                      },
+                    );
+                  },
+                  child: Text(
+                    'Add New Rider',
+                    style: CTextTheme.blackTextTheme.headlineMedium,
+                  ))
             ],
           ),
         ),
@@ -174,10 +179,11 @@ class RiderList extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         showDialog(
-                          context: context, 
+                          context: context,
                           builder: (BuildContext context) {
                             return RiderDetails(rider: rider);
-                          },);
+                          },
+                        );
                       },
                       child: Text(
                         'Check',
