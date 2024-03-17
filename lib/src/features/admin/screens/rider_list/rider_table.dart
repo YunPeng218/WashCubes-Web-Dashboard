@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:washcubes_admindashboard/config.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/rider_list/rider_details.dart';
@@ -20,6 +21,7 @@ class RiderTable extends StatefulWidget {
 
 class _RiderTableState extends State<RiderTable> {
   List<Rider> riders = [];
+  List<Rider> allRiders = [];
 
   @override
   void initState() {
@@ -44,6 +46,7 @@ class _RiderTableState extends State<RiderTable> {
               riderData.map((rider) => Rider.fromJson(rider)).toList();
           setState(() {
             riders = fetchedRiders;
+            allRiders = fetchedRiders;
           });
         } else {
           print('Response data does not contain services.');
@@ -55,6 +58,15 @@ class _RiderTableState extends State<RiderTable> {
     } catch (error) {
       print('Error Fetching Riders Details: $error');
     }
+  }
+
+  List<Rider> searchRider(List<Rider> riders, String? keyword) {
+    if (keyword == null) {
+      return riders;
+    }
+    return riders
+        .where((riders) => (riders.name.toLowerCase()).contains(keyword.toLowerCase()))
+        .toList();
   }
 
   @override
@@ -115,7 +127,10 @@ class _RiderTableState extends State<RiderTable> {
                 ),
               ),
               onChanged: (value) {
-                //TODO: Handle search functionality
+                setState(() {
+                  riders = allRiders;
+                  riders = searchRider(riders, value);
+                });
               },
             ),
           ),

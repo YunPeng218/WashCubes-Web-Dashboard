@@ -9,15 +9,16 @@ import 'package:washcubes_admindashboard/config.dart';
 import 'package:washcubes_admindashboard/src/models/order.dart';
 import 'package:washcubes_admindashboard/src/models/service.dart';
 import 'package:washcubes_admindashboard/src/models/locker.dart';
+import 'package:washcubes_admindashboard/src/constants/colors.dart';
 
-class AdminOrderTable extends StatefulWidget {
-  const AdminOrderTable({super.key});
+class OrderData extends StatefulWidget {
+  const OrderData({super.key});
 
   @override
-  State<AdminOrderTable> createState() => _AdminOrderTableState();
+  State<OrderData> createState() => _OrderDataState();
 }
 
-class _AdminOrderTableState extends State<AdminOrderTable> {
+class _OrderDataState extends State<OrderData> {
   List<Order> orders = [];
   List<Order> allOrders = [];
 
@@ -113,6 +114,123 @@ class _AdminOrderTableState extends State<AdminOrderTable> {
 
   @override
   Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'Orders',
+                    style: CTextTheme.blackTextTheme.displayLarge,
+                  ),
+                  IconButton(
+                    onPressed: () async {
+                      await fetchOrders();
+                    },
+                    icon: const Icon(
+                      Icons.refresh_rounded,
+                      color: AppColors.cBlackColor,
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: SizedBox(
+            height: 40.0,
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Search by Order No...',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  orders = allOrders;
+                  orders = filterOrdersByQuery(orders, value);
+                });
+              },
+            ),
+          ),
+        ),
+        Flexible(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AdminOrderTable(orders: orders),
+            ],
+          )
+        ),
+      ],
+    );
+  }
+}
+
+class AdminOrderTable extends StatefulWidget {
+  List<Order> orders = [];
+
+  AdminOrderTable({super.key, required this.orders});
+
+  @override
+  State<AdminOrderTable> createState() => _AdminOrderTableState();
+}
+
+class _AdminOrderTableState extends State<AdminOrderTable> {
+
+  Future<String> getServiceName(String serviceId) async {
+    String serviceName = 'Loading...';
+    try {
+      final response = await http.get(Uri.parse('${url}services/$serviceId'),
+          headers: {'Content-Type': 'application/json'});
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        if (data.containsKey('service')) {
+          final dynamic serviceData = data['service'];
+          final Service service = Service.fromJson(serviceData);
+          serviceName = service.name;
+        }
+      }
+    } catch (error) {
+      print('Error Fetching Service Name: $error');
+    }
+    return serviceName;
+  }
+
+  Future<String> getLockerSiteDetails(String lockerSiteId) async {
+    String dropOffLocation = 'Loading...';
+    try {
+      final response = await http.get(
+          Uri.parse('${url}lockers?lockerSiteId=$lockerSiteId'),
+          headers: {'Content-Type': 'application/json'});
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        if (data.containsKey('locker')) {
+          final dynamic lockerData = data['locker'];
+          final LockerSite lockerSite = LockerSite.fromJson(lockerData);
+          dropOffLocation = lockerSite.name;
+        }
+      }
+    } catch (error) {
+      print('Error Fetching Drop Off Location: $error');
+    }
+    return dropOffLocation;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return SingleChildScrollView(
@@ -157,7 +275,7 @@ class _AdminOrderTableState extends State<AdminOrderTable> {
           )),
           const DataColumn(label: Text('')),
         ],
-        rows: orders
+        rows: widget.orders
             .map(
               (order) => DataRow(cells: [
                 DataCell(Text(

@@ -124,7 +124,7 @@ class OrderTableState extends State<OrderTable> {
             height: 40.0,
             child: TextField(
               decoration: InputDecoration(
-                hintText: 'Search by Order Number',
+                hintText: 'Search by Order No...',
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),

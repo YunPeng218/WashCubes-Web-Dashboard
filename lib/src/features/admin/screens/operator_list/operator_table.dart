@@ -20,6 +20,7 @@ class OperatorTable extends StatefulWidget {
 
 class _OperatorTableState extends State<OperatorTable> {
   List<Operator> operators = [];
+  List<Operator> allOperators = [];
 
   @override
   void initState() {
@@ -45,6 +46,7 @@ class _OperatorTableState extends State<OperatorTable> {
               .toList();
           setState(() {
             operators = fetchedOperators;
+            allOperators = fetchedOperators;
           });
         } else {
           print('Response data does not contain services.');
@@ -56,6 +58,15 @@ class _OperatorTableState extends State<OperatorTable> {
     } catch (error) {
       print('Error Fetching Operators Details: $error');
     }
+  }
+
+  List<Operator> searchOperator(List<Operator> operators, String? keyword) {
+    if (keyword == null) {
+      return operators;
+    }
+    return operators
+        .where((operators) => (operators.name.toLowerCase()).contains(keyword.toLowerCase()))
+        .toList();
   }
 
   @override
@@ -116,7 +127,10 @@ class _OperatorTableState extends State<OperatorTable> {
                 ),
               ),
               onChanged: (value) {
-                //TODO: Handle search functionality
+                setState(() {
+                  operators = allOperators;
+                  operators = searchOperator(operators, value);
+                });
               },
             ),
           ),
