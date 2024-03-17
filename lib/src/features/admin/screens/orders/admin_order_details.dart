@@ -5,7 +5,6 @@ import 'package:washcubes_admindashboard/src/constants/colors.dart';
 import 'package:washcubes_admindashboard/src/constants/sizes.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 import 'package:washcubes_admindashboard/src/models/order.dart';
-import 'package:washcubes_admindashboard/src/models/locker.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:washcubes_admindashboard/config.dart';

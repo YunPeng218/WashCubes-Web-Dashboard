@@ -16,6 +16,10 @@ class OperatorTable extends StatefulWidget {
 
   @override
   State<OperatorTable> createState() => _OperatorTableState();
+
+  void refreshTable() {
+    (key as _OperatorTableState).fetchOperatorsDetails();
+  }
 }
 
 class _OperatorTableState extends State<OperatorTable> {
@@ -103,7 +107,9 @@ class _OperatorTableState extends State<OperatorTable> {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return const AddOperator();
+                        return AddOperator(
+                          refreshTable: fetchOperatorsDetails,
+                        );
                       },
                     );
                   },
@@ -138,6 +144,7 @@ class _OperatorTableState extends State<OperatorTable> {
         Flexible(
           child: OperatorList(
             operators: operators,
+            refreshTable: fetchOperatorsDetails,
           ),
         ),
       ],
@@ -147,8 +154,9 @@ class _OperatorTableState extends State<OperatorTable> {
 
 class OperatorList extends StatelessWidget {
   List<Operator> operators = [];
+  final VoidCallback refreshTable;
 
-  OperatorList({super.key, required this.operators});
+  OperatorList({super.key, required this.operators, required this.refreshTable});
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +204,7 @@ class OperatorList extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return OperatorDetails(operator: operator);
+                            return OperatorDetails(operator: operator, refreshTable: refreshTable);
                           },
                         );
                       },

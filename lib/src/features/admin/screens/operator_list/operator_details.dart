@@ -7,9 +7,10 @@ import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_
 import 'package:http/http.dart' as http;
 
 class OperatorDetails extends StatefulWidget {
+  final VoidCallback refreshTable;
   final Operator operator;
 
-  const OperatorDetails({super.key, required this.operator});
+  const OperatorDetails({super.key, required this.operator, required this.refreshTable});
 
   @override
   State<OperatorDetails> createState() => _OperatorDetailsState();
@@ -67,6 +68,8 @@ class _OperatorDetailsState extends State<OperatorDetails> {
         },
       );
       if (response.statusCode == 200) {
+        widget.refreshTable();
+        Navigator.pop(context);
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -87,7 +90,6 @@ class _OperatorDetailsState extends State<OperatorDetails> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.pop(context);
                           Navigator.pop(context);
                         },
                         child: Text(

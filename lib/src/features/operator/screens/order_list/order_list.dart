@@ -21,6 +21,10 @@ class OrderTable extends StatefulWidget {
 
   @override
   State<OrderTable> createState() => OrderTableState();
+
+  void refreshOrders() {
+    (key as OrderTableState).fetchOrders();
+  }
 }
 
 class OrderTableState extends State<OrderTable> {
@@ -142,6 +146,7 @@ class OrderTableState extends State<OrderTable> {
         Flexible(
           child: OrderList(
             orders: filteredOrders,
+            refreshOrders: fetchOrders,
           ),
         ),
       ],
@@ -151,8 +156,9 @@ class OrderTableState extends State<OrderTable> {
 
 class OrderList extends StatelessWidget {
   List<Order> orders = [];
+  final VoidCallback refreshOrders;
 
-  OrderList({super.key, required this.orders});
+  OrderList({super.key, required this.orders, required this.refreshOrders});
 
   Future<String> getServiceName(String serviceId) async {
     String serviceName = 'Loading...';
@@ -378,7 +384,9 @@ class OrderList extends StatelessWidget {
               receiverDetails: receiverDetails,
             );
           },
-        );
+        ).then((_) {
+          refreshOrders();
+        });
         break;
       case 'Processing':
         showDialog(
@@ -390,7 +398,9 @@ class OrderList extends StatelessWidget {
               receiverDetails: receiverDetails,
             );
           },
-        );
+        ).then((_) {
+          refreshOrders();
+        });
         break;
       case 'Order Error':
         showDialog(
@@ -402,7 +412,9 @@ class OrderList extends StatelessWidget {
               receiverDetails: receiverDetails,
             );
           },
-        );
+        ).then((_) {
+          refreshOrders();
+        });
         break;
       case 'Pending Return Approval':
         showDialog(
@@ -414,7 +426,9 @@ class OrderList extends StatelessWidget {
               receiverDetails: receiverDetails,
             );
           },
-        );
+        ).then((_) {
+          refreshOrders();
+        });
         break;
       case 'Returned':
         showDialog(

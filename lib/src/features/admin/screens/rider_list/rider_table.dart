@@ -2,7 +2,6 @@
 
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:washcubes_admindashboard/config.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/rider_list/rider_details.dart';
@@ -17,6 +16,10 @@ class RiderTable extends StatefulWidget {
 
   @override
   State<RiderTable> createState() => _RiderTableState();
+
+  void refreshTable() {
+    (key as _RiderTableState).fetchRidersDetails();
+  }
 }
 
 class _RiderTableState extends State<RiderTable> {
@@ -103,7 +106,9 @@ class _RiderTableState extends State<RiderTable> {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return const AddRider();
+                        return AddRider(
+                          refreshTable: fetchRidersDetails,
+                        );
                       },
                     );
                   },
@@ -138,6 +143,7 @@ class _RiderTableState extends State<RiderTable> {
         Flexible(
           child: RiderList(
             riders: riders,
+            refreshTable: fetchRidersDetails
           ),
         ),
       ],
@@ -147,8 +153,9 @@ class _RiderTableState extends State<RiderTable> {
 
 class RiderList extends StatelessWidget {
   List<Rider> riders = [];
+  final VoidCallback refreshTable;
 
-  RiderList({super.key, required this.riders});
+  RiderList({super.key, required this.riders, required this.refreshTable});
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +203,7 @@ class RiderList extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return RiderDetails(rider: rider);
+                            return RiderDetails(rider: rider, refreshTable: refreshTable);
                           },
                         );
                       },

@@ -7,9 +7,10 @@ import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_
 import 'package:http/http.dart' as http;
 
 class RiderDetails extends StatefulWidget {
+  final VoidCallback refreshTable;
   final Rider rider;
 
-  const RiderDetails({super.key, required this.rider});
+  const RiderDetails({super.key, required this.rider, required this.refreshTable});
 
   @override
   State<RiderDetails> createState() => _RiderDetailsState();
@@ -67,6 +68,8 @@ class _RiderDetailsState extends State<RiderDetails> {
         },
       );
       if (response.statusCode == 200) {
+        widget.refreshTable();
+        Navigator.pop(context);
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -87,7 +90,6 @@ class _RiderDetailsState extends State<RiderDetails> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.pop(context);
                           Navigator.pop(context);
                         },
                         child: Text(

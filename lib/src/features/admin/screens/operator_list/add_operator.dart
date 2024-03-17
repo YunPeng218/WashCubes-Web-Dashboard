@@ -11,7 +11,9 @@ import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_
 import 'package:http/http.dart' as http;
 
 class AddOperator extends StatefulWidget {
-  const AddOperator({super.key});
+  final VoidCallback refreshTable;
+
+  const AddOperator({super.key, required this.refreshTable});
 
   @override
   State<AddOperator> createState() => _AddOperatorState();
@@ -168,6 +170,7 @@ class _AddOperatorState extends State<AddOperator> {
       );
 
       if (response.statusCode == 200) {
+        widget.refreshTable();
         showDialog(
           context: context,
           builder: (BuildContext context) {

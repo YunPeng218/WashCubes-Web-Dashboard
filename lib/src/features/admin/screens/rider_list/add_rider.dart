@@ -12,7 +12,9 @@ import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_
 import 'package:http/http.dart' as http;
 
 class AddRider extends StatefulWidget {
-  const AddRider({super.key});
+  final VoidCallback refreshTable;
+
+  const AddRider({super.key, required this.refreshTable});
 
   @override
   State<AddRider> createState() => _AddRiderState();
@@ -150,6 +152,7 @@ class _AddRiderState extends State<AddRider> {
       );
 
       if (response.statusCode == 200) {
+        widget.refreshTable();
         showDialog(
           context: context,
           builder: (BuildContext context) {
