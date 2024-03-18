@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:washcubes_admindashboard/src/features/admin/screens/lockers/locker_table.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/operator_list/operator_table.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/orders/admin_order_table.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/rider_list/rider_table.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/top_nav/top_nav.dart';
 import 'package:washcubes_admindashboard/src/constants/colors.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/feedback_list/feedback_list.dart';
-import 'package:washcubes_admindashboard/src/features/admin/screens/lockers/locker.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/login/admin_login_page.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
 

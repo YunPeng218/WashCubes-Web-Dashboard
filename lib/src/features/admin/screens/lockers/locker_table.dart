@@ -5,16 +5,18 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:washcubes_admindashboard/config.dart';
 import 'package:washcubes_admindashboard/src/models/locker.dart';
+import 'package:washcubes_admindashboard/src/constants/colors.dart';
 
-class LockerTable extends StatefulWidget {
-  const LockerTable({super.key});
+class LockerPage extends StatefulWidget {
+  const LockerPage({super.key});
 
   @override
-  State<LockerTable> createState() => _LockerTableState();
+  State<LockerPage> createState() => _LockerPageState();
 }
 
-class _LockerTableState extends State<LockerTable> {
+class _LockerPageState extends State<LockerPage> {
   List<LockerSite> lockerSites = [];
+  List<LockerSite> allLockerSites = [];
 
   @override
   void initState() {
@@ -36,6 +38,7 @@ class _LockerTableState extends State<LockerTable> {
               lockerData.map((site) => LockerSite.fromJson(site)).toList();
           setState(() {
             lockerSites = fetchedLockerSites;
+            allLockerSites = fetchedLockerSites;
           });
         } else {
           print('No lockers found.');
@@ -48,6 +51,82 @@ class _LockerTableState extends State<LockerTable> {
       print('Error fetching locker sites: $error');
     }
   }
+
+  List<LockerSite> searchLockerSite(List<LockerSite> lockerSites, String? keyword) {
+    if (keyword == null) {
+      return lockerSites;
+    }
+    return lockerSites
+        .where((lockerSites) =>
+            (lockerSites.name.toLowerCase()).contains(keyword.toLowerCase()))
+        .toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'Lockers',
+                    style: CTextTheme.blackTextTheme.displayLarge,
+                  ),
+                  IconButton(
+                    onPressed: () async {
+                      await fetchLockerSites();
+                    },
+                    icon: const Icon(
+                      Icons.refresh_rounded,
+                      color: AppColors.cBlackColor,
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: SizedBox(
+            height: 40.0,
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Search by Location Name...',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  lockerSites = allLockerSites;
+                  lockerSites = searchLockerSite(lockerSites, value);
+                });
+              },
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Center(child: LockerTable(lockerSites: lockerSites))
+        ),
+      ],
+    );
+  }
+}
+
+class LockerTable extends StatelessWidget {
+  List<LockerSite> lockerSites = [];
+
+  LockerTable({super.key, required this.lockerSites});
 
   @override
   Widget build(BuildContext context) {

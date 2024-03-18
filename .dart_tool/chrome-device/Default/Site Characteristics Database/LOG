@@ -1,2 +1,9 @@
-2024/03/18-10:01:27.890 612c Creating DB C:\Users\ivant\AppData\Local\Temp\flutter_tools.c5e627b2\flutter_tools_chrome_device.ee01b3ae\Default\Site Characteristics Database since it was missing.
-2024/03/18-10:01:27.900 612c Reusing MANIFEST C:\Users\ivant\AppData\Local\Temp\flutter_tools.c5e627b2\flutter_tools_chrome_device.ee01b3ae\Default\Site Characteristics Database/MANIFEST-000001
+2024/03/18-19:22:58.580 9ac Reusing MANIFEST C:\Users\YunPeng\AppData\Local\Temp\flutter_tools.1938e829\flutter_tools_chrome_device.27e5e775\Default\Site Characteristics Database/MANIFEST-000001
+2024/03/18-19:22:58.581 9ac Recovering log #10
+2024/03/18-19:22:58.581 9ac Reusing old log C:\Users\YunPeng\AppData\Local\Temp\flutter_tools.1938e829\flutter_tools_chrome_device.27e5e775\Default\Site Characteristics Database/000010.log 
+2024/03/18-19:22:58.582 9ac Delete type=0 #3
+2024/03/18-19:22:58.582 9ac Delete type=2 #6
+2024/03/18-19:22:58.582 9ac Delete type=0 #6
+2024/03/18-19:22:58.582 9ac Delete type=2 #11
+2024/03/18-19:22:58.582 9ac Delete type=2 #13
+2024/03/18-19:22:58.582 9ac Delete type=2 #14

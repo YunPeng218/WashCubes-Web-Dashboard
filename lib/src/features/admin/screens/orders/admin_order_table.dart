@@ -107,7 +107,7 @@ class _OrderDataState extends State<OrderData> {
       return orders;
     }
     return orders
-        .where((orders) => orders.orderNumber.contains(query))
+        .where((orders) => (orders.orderNumber).toLowerCase().contains(query.toLowerCase()))
         .toList();
   }
 

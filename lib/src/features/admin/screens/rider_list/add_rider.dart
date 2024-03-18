@@ -22,6 +22,7 @@ class AddRider extends StatefulWidget {
 
 class _AddRiderState extends State<AddRider> {
   bool _isObscure = true;
+  bool _isObscure1 = true;
   final TextEditingController _nameController = TextEditingController();
   bool isNotValidateName = false;
   String errorTextName = '';
@@ -31,6 +32,9 @@ class _AddRiderState extends State<AddRider> {
   final TextEditingController _passwordController = TextEditingController();
   bool isNotValidatePassword = false;
   String errorTextPassword = '';
+  final TextEditingController _passwordController1 = TextEditingController();
+  bool isNotValidatePassword1 = false;
+  String errorTextPassword1 = '';
   final TextEditingController _mobileNumberController = TextEditingController();
   bool isNotValidateMobileNumber = false;
   String errorTextMobileNumber = '';
@@ -86,9 +90,48 @@ class _AddRiderState extends State<AddRider> {
         isNotValidatePassword = true;
       });
       return;
+    } else if (_passwordController.text.length < 8) {
+      setState(() {
+        errorTextPassword = 'Password must be at least 8 characters long.';
+        isNotValidatePassword = true;
+      });
+      return;
+    } else if (!_passwordController.text.contains(RegExp(r'[A-Z]'))) {
+      setState(() {
+        errorTextPassword = 'Password must contain at least 1 uppercase letter.';
+        isNotValidatePassword = true;
+      });
+      return;
+    } else if (!_passwordController.text.contains(RegExp(r'[a-z]'))) {
+      setState(() {
+        errorTextPassword = 'Password must contain at least 1 lowercase letter.';
+        isNotValidatePassword = true;
+      });
+      return;
+    } else if (!_passwordController.text.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+      setState(() {
+        errorTextPassword = 'Password must contain at least 1 symbol.';
+        isNotValidatePassword = true;
+      });
+      return;
     }
 
-    if (!isNotValidateName && !isNotValidateMobileNumber && !isNotValidateEmail && !isNotValidatePassword) {
+    // Confirm Password Validation
+    if (_passwordController1.text.isEmpty) {
+      setState(() {
+        errorTextPassword1 = 'Please Confirm Rider Password.';
+        isNotValidatePassword1 = true;
+      });
+      return;
+    } else if (_passwordController.text != _passwordController1.text) {
+      setState(() {
+        errorTextPassword1 = 'Passwords do not match.';
+        isNotValidatePassword1 = true;
+      });
+      return;
+    }
+
+    if (!isNotValidateName && !isNotValidateMobileNumber && !isNotValidateEmail && !isNotValidatePassword && !isNotValidatePassword1) {
       registerRider();
     }
   }
@@ -363,6 +406,28 @@ class _AddRiderState extends State<AddRider> {
                       ),
                     ),
                   ),
+                  ListTile(
+                    leading: Text('CONFIRM PASSWORD', style: CTextTheme.greyTextTheme.headlineLarge,),
+                    title: TextField(
+                      controller: _passwordController1,
+                      obscureText: _isObscure1,
+                      decoration: InputDecoration(
+                        hintText: 'Confirm Password',
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _isObscure1 = !_isObscure1;
+                            });
+                          },
+                          child: Icon(
+                            //If Obscure=true, use visibility_off icon, else use visibility icon
+                            _isObscure1 ? Icons.visibility_off : Icons.visibility,
+                          ),
+                        ),
+                        errorText: isNotValidatePassword1 ? errorTextPassword1 : null,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -375,12 +440,14 @@ class _AddRiderState extends State<AddRider> {
             setState(() {
               isNotValidateEmail = false;
               isNotValidatePassword = false;
+              isNotValidatePassword1 = false;
               isNotValidateMobileNumber = false;
               isNotValidateName = false;
               errorTextName = '';
               errorTextMobileNumber = '';
               errorTextEmail = '';
               errorTextPassword = '';
+              errorTextPassword1 = '';
             });
             validateInputs();
           }, 

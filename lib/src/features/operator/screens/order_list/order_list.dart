@@ -84,7 +84,7 @@ class OrderTableState extends State<OrderTable> {
       return orders;
     }
     return orders
-        .where((orders) => orders.orderNumber.contains(filter))
+        .where((orders) => (orders.orderNumber).toLowerCase().contains(filter.toLowerCase()))
         .toList();
   }
 
