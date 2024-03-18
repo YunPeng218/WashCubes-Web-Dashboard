@@ -45,7 +45,6 @@ class _OrderDataState extends State<OrderData> {
           final List<dynamic> orderData = data['orders'];
           final List<Order> fetchedOrders =
               orderData.map((order) => Order.fromJson(order)).toList();
-          print(fetchedOrders);
           setState(() {
             orders = fetchedOrders;
             allOrders = fetchedOrders;
@@ -165,13 +164,12 @@ class _OrderDataState extends State<OrderData> {
           ),
         ),
         Flexible(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AdminOrderTable(orders: orders),
-            ],
-          )
-        ),
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AdminOrderTable(orders: orders),
+          ],
+        )),
       ],
     );
   }
@@ -187,7 +185,6 @@ class AdminOrderTable extends StatefulWidget {
 }
 
 class _AdminOrderTableState extends State<AdminOrderTable> {
-
   Future<String> getServiceName(String serviceId) async {
     String serviceName = 'Loading...';
     try {

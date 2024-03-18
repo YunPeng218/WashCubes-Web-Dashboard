@@ -131,6 +131,23 @@ class _AdminOrderDetailsState extends State<AdminOrderDetails> {
                             style: CTextTheme.blackTextTheme.headlineMedium,
                           ),
                         ),
+                        ListTile(
+                          leading: Text(
+                            'ORDER ERROR',
+                            style: CTextTheme.greyTextTheme.headlineMedium,
+                          ),
+                          title: Text(
+                            widget.order.orderStage?.orderError.userRejected ==
+                                    true
+                                ? 'REJECTED'
+                                : widget.order.orderStage?.orderError
+                                            .userAccepted ==
+                                        true
+                                    ? 'RESOLVED'
+                                    : 'NONE',
+                            style: CTextTheme.blackTextTheme.headlineMedium,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -166,7 +183,7 @@ class _AdminOrderDetailsState extends State<AdminOrderDetails> {
                 ],
               ),
               const Divider(),
-              //Receiving Detail Row
+              // Locker Details
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -175,32 +192,10 @@ class _AdminOrderDetailsState extends State<AdminOrderDetails> {
                       children: [
                         ListTile(
                           leading: Text(
-                            'EXTRA DETAILS',
+                            'LOCKER DETAILS',
                             style: CTextTheme.blackTextTheme.headlineMedium,
                           ),
                         ),
-                        ListTile(
-                          leading: Text(
-                            'ORDER ERROR',
-                            style: CTextTheme.greyTextTheme.headlineMedium,
-                          ),
-                          title: Text(
-                            widget.order.orderStage?.orderError.status == false
-                                ? 'NONE'
-                                : widget.order.orderStage?.orderError
-                                            .userRejected ==
-                                        true
-                                    ? 'REJECTED'
-                                    : 'RESOLVED',
-                            style: CTextTheme.blackTextTheme.headlineMedium,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Flexible(
-                    child: Column(
-                      children: [
                         ListTile(
                           leading: Text(
                             'DROP OFF LOCATION:',
@@ -218,6 +213,119 @@ class _AdminOrderDetailsState extends State<AdminOrderDetails> {
                           ),
                           title: Text(
                             widget.pickupLocation,
+                            style: CTextTheme.blackTextTheme.headlineMedium,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: Text(
+                            'DROP OFF COMPARTMENT:',
+                            style: CTextTheme.greyTextTheme.headlineMedium,
+                          ),
+                          title: Text(
+                            widget.order.lockerDetails?.compartmentNumber ??
+                                'N/A',
+                            style: CTextTheme.blackTextTheme.headlineMedium,
+                          ),
+                        ),
+                        ListTile(
+                          leading: Text(
+                            'PICK UP COMPARTMENT:',
+                            style: CTextTheme.greyTextTheme.headlineMedium,
+                          ),
+                          title: Text(
+                            widget.order.collectionSite?.compartmentNumber ??
+                                'N/A',
+                            style: CTextTheme.blackTextTheme.headlineMedium,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(),
+              // RIDER DETAILS
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: Text(
+                            'DELIVERY DETAILS',
+                            style: CTextTheme.blackTextTheme.headlineMedium,
+                          ),
+                        ),
+                        ListTile(
+                          leading: Text(
+                            'PICK UP RIDER NAME:',
+                            style: CTextTheme.greyTextTheme.headlineMedium,
+                          ),
+                          title: Text(
+                            jobDetails['pickupRiderName'] ?? 'N/A',
+                            style: CTextTheme.blackTextTheme.headlineMedium,
+                          ),
+                        ),
+                        ListTile(
+                          leading: Text(
+                            'PICKUP RIDER PHONE:',
+                            style: CTextTheme.greyTextTheme.headlineMedium,
+                          ),
+                          title: Text(
+                            jobDetails['pickupRiderPhone'] ?? 'N/A',
+                            style: CTextTheme.blackTextTheme.headlineMedium,
+                          ),
+                        ),
+                        ListTile(
+                          leading: Text(
+                            'DROPOFF RIDER NAME:',
+                            style: CTextTheme.greyTextTheme.headlineMedium,
+                          ),
+                          title: Text(
+                            jobDetails['dropoffRiderName'] ?? 'N/A',
+                            style: CTextTheme.blackTextTheme.headlineMedium,
+                          ),
+                        ),
+                        ListTile(
+                          leading: Text(
+                            'DROPOFF RIDER PHONE:',
+                            style: CTextTheme.greyTextTheme.headlineMedium,
+                          ),
+                          title: Text(
+                            jobDetails['dropoffRiderPhone'] ?? 'N/A',
+                            style: CTextTheme.blackTextTheme.headlineMedium,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: Text(
+                            'RECEIVER NAME:',
+                            style: CTextTheme.greyTextTheme.headlineMedium,
+                          ),
+                          title: Text(
+                            jobDetails['receiverName'] ?? 'N/A',
+                            style: CTextTheme.blackTextTheme.headlineMedium,
+                          ),
+                        ),
+                        ListTile(
+                          leading: Text(
+                            'RECEIVER IC:',
+                            style: CTextTheme.greyTextTheme.headlineMedium,
+                          ),
+                          title: Text(
+                            jobDetails['receiverIC'] ?? 'N/A',
                             style: CTextTheme.blackTextTheme.headlineMedium,
                           ),
                         ),
@@ -243,7 +351,7 @@ class _AdminOrderDetailsState extends State<AdminOrderDetails> {
                         ),
                         ListTile(
                           leading: Text(
-                            'SERVICE TYPE',
+                            'SERVICE TYPE:',
                             style: CTextTheme.greyTextTheme.headlineMedium,
                           ),
                           title: Text(
@@ -253,20 +361,25 @@ class _AdminOrderDetailsState extends State<AdminOrderDetails> {
                         ),
                         ListTile(
                           leading: Text(
-                            'EST / FINAL PRICE',
+                            'ESTIMATED PRICE:',
                             style: CTextTheme.greyTextTheme.headlineMedium,
                           ),
-                          title: widget.order.finalPrice == 0.0
-                              ? Text(
-                                  'RM${widget.order.estimatedPrice.toStringAsFixed(2)}',
-                                  style:
-                                      CTextTheme.blackTextTheme.headlineMedium,
-                                )
-                              : Text(
-                                  'RM${widget.order.finalPrice?.toStringAsFixed(2)}',
-                                  style:
-                                      CTextTheme.blackTextTheme.headlineMedium,
-                                ),
+                          title: Text(
+                            'RM${widget.order.estimatedPrice.toStringAsFixed(2)}',
+                            style: CTextTheme.blackTextTheme.headlineMedium,
+                          ),
+                        ),
+                        ListTile(
+                          leading: Text(
+                            'FINAL PRICE:',
+                            style: CTextTheme.greyTextTheme.headlineMedium,
+                          ),
+                          title: Text(
+                            widget.order.finalPrice == 0.0
+                                ? 'N/A'
+                                : 'RM${widget.order.finalPrice!.toStringAsFixed(2)}',
+                            style: CTextTheme.blackTextTheme.headlineMedium,
+                          ),
                         ),
                       ],
                     ),
@@ -274,13 +387,18 @@ class _AdminOrderDetailsState extends State<AdminOrderDetails> {
                 ],
               ),
               Text(
-                'ORDER ITEMS',
+                widget.order.orderStage?.orderError.status == true
+                    ? 'NEW ORDER ITEMS'
+                    : 'ORDER ITEMS',
                 style: CTextTheme.blackTextTheme.headlineMedium,
               ),
-              const Divider(),
               //Order Item List
               Column(
                 children: [
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  const Divider(),
                   Row(
                     children: [
                       Expanded(
@@ -362,6 +480,104 @@ class _AdminOrderDetailsState extends State<AdminOrderDetails> {
                   )
                 ],
               ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              widget.order.oldOrderItems.isNotEmpty
+                  ? Text(
+                      'OLD ORDER ITEMS',
+                      style: CTextTheme.blackTextTheme.headlineMedium,
+                    )
+                  : const SizedBox(),
+              widget.order.oldOrderItems.isNotEmpty
+                  ? Column(
+                      children: [
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                        const Divider(),
+                        Row(
+                          children: [
+                            Expanded(
+                                child: Text(
+                              'ITEM',
+                              style: CTextTheme.greyTextTheme.headlineMedium,
+                              textAlign: TextAlign.center,
+                            )),
+                            Expanded(
+                                child: Text(
+                              'PRICE',
+                              style: CTextTheme.greyTextTheme.headlineMedium,
+                              textAlign: TextAlign.center,
+                            )),
+                            Expanded(
+                                child: Text(
+                              'QUANTITY',
+                              style: CTextTheme.greyTextTheme.headlineMedium,
+                              textAlign: TextAlign.center,
+                            )),
+                            Expanded(
+                                child: Text(
+                              'CUM. PRICE',
+                              style: CTextTheme.greyTextTheme.headlineMedium,
+                              textAlign: TextAlign.center,
+                            )),
+                            const SizedBox(width: 45.0),
+                          ],
+                        ),
+                        const Divider(),
+                        // Order Item List
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: widget.order.oldOrderItems.length,
+                          itemBuilder: (context, index) {
+                            final item = widget.order.oldOrderItems[index];
+                            return Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        item.name,
+                                        style: CTextTheme
+                                            .blackTextTheme.headlineMedium,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        'RM${item.price.toStringAsFixed(2)}/${item.unit}',
+                                        style: CTextTheme
+                                            .blackTextTheme.headlineMedium,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        item.quantity.toString(),
+                                        style: CTextTheme
+                                            .blackTextTheme.headlineMedium,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        'RM${item.cumPrice.toStringAsFixed(2)}',
+                                        style: CTextTheme
+                                            .blackTextTheme.headlineMedium,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                              ],
+                            );
+                          },
+                        )
+                      ],
+                    )
+                  : const SizedBox(),
             ],
           ),
 

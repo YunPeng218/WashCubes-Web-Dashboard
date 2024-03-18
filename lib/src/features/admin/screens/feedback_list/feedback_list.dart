@@ -38,8 +38,9 @@ class _FeedbackTableState extends State<FeedbackTable> {
         final Map<String, dynamic> data = json.decode(response.body);
         if (data.containsKey('feedbacks')) {
           final List<dynamic> feedbackData = data['feedbacks'];
-          final List<Feedbacks> fetchedFeedbacks =
-              feedbackData.map((feedback) => Feedbacks.fromJson(feedback)).toList();
+          final List<Feedbacks> fetchedFeedbacks = feedbackData
+              .map((feedback) => Feedbacks.fromJson(feedback))
+              .toList();
           setState(() {
             feedbacks = fetchedFeedbacks;
           });
@@ -69,7 +70,7 @@ class _FeedbackTableState extends State<FeedbackTable> {
               Row(
                 children: [
                   Text(
-                    'FeedbackList',
+                    'Feedback List',
                     style: CTextTheme.blackTextTheme.displayLarge,
                   ),
                   IconButton(
@@ -117,17 +118,17 @@ class FeedbackList extends StatelessWidget {
             )),
             DataColumn(
                 label: Text(
-              'USER PHONE NUMBER',
+              'USER PHONE',
               style: CTextTheme.greyTextTheme.headlineMedium,
             )),
             DataColumn(
                 label: Text(
-              'IMPROVEMENT CATEGORIES',
+              'IMPROVEMENT CAT.',
               style: CTextTheme.greyTextTheme.headlineMedium,
             )),
             DataColumn(
                 label: Text(
-              'DATE RECEIVED',
+              'DATE',
               style: CTextTheme.greyTextTheme.headlineMedium,
             )),
             DataColumn(
@@ -151,9 +152,12 @@ class FeedbackList extends StatelessWidget {
                   DataCell(SizedBox(
                       width: 200,
                       child: Text(
-                        feedback.improvementCategories.toString().replaceAll('[', '').replaceAll(']', ''),
+                        feedback.improvementCategories
+                            .toString()
+                            .replaceAll('[', '')
+                            .replaceAll(']', ''),
                         style: CTextTheme.blackTextTheme.headlineMedium,
-                        overflow: TextOverflow.ellipsis, 
+                        overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                       ))),
                   DataCell(SizedBox(
@@ -183,10 +187,11 @@ class FeedbackList extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         showDialog(
-                          context: context, 
+                          context: context,
                           builder: (BuildContext context) {
                             return FeedbackDetails(feedback: feedback);
-                          },);
+                          },
+                        );
                       },
                       child: Text(
                         'Check',
@@ -199,42 +204,42 @@ class FeedbackList extends StatelessWidget {
               .toList(),
         ),
         const Spacer(),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
+        const Padding(
+          padding: EdgeInsets.all(8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              IconButton(
-                onPressed: () {
-                  //TODO: Handle previous page button tap
-                },
-                icon: Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFFD7ECF7),
-                  ),
-                  child: const Icon(Icons.arrow_back),
-                ),
-              ),
+              // IconButton(
+              //   onPressed: () {
+              //     //TODO: Handle previous page button tap
+              //   },
+              //   icon: Container(
+              //     decoration: const BoxDecoration(
+              //       shape: BoxShape.circle,
+              //       color: Color(0xFFD7ECF7),
+              //     ),
+              //     child: const Icon(Icons.arrow_back),
+              //   ),
+              // ),
 
-              const SizedBox(width: 16), // Adjust spacing as needed
-              Text(
-                'Page 1 of 5', // Replace with actual page number
-                style: CTextTheme.blackTextTheme.headlineMedium,
-              ),
-              const SizedBox(width: 16), // Adjust spacing as needed
-              IconButton(
-                onPressed: () {
-                  //TODO: Handle next page button tap
-                },
-                icon: Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFFD7ECF7),
-                  ),
-                  child: const Icon(Icons.arrow_forward),
-                ),
-              ),
+              // const SizedBox(width: 16), // Adjust spacing as needed
+              // Text(
+              //   'Page 1 of 5', // Replace with actual page number
+              //   style: CTextTheme.blackTextTheme.headlineMedium,
+              // ),
+              // const SizedBox(width: 16), // Adjust spacing as needed
+              // IconButton(
+              //   onPressed: () {
+              //     //TODO: Handle next page button tap
+              //   },
+              //   icon: Container(
+              //     decoration: const BoxDecoration(
+              //       shape: BoxShape.circle,
+              //       color: Color(0xFFD7ECF7),
+              //     ),
+              //     child: const Icon(Icons.arrow_forward),
+              //   ),
+              // ),
             ],
           ),
         ),

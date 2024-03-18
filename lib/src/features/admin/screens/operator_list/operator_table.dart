@@ -69,7 +69,8 @@ class _OperatorTableState extends State<OperatorTable> {
       return operators;
     }
     return operators
-        .where((operators) => (operators.name.toLowerCase()).contains(keyword.toLowerCase()))
+        .where((operators) =>
+            (operators.name.toLowerCase()).contains(keyword.toLowerCase()))
         .toList();
   }
 
@@ -156,7 +157,8 @@ class OperatorList extends StatelessWidget {
   List<Operator> operators = [];
   final VoidCallback refreshTable;
 
-  OperatorList({super.key, required this.operators, required this.refreshTable});
+  OperatorList(
+      {super.key, required this.operators, required this.refreshTable});
 
   @override
   Widget build(BuildContext context) {
@@ -204,7 +206,8 @@ class OperatorList extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return OperatorDetails(operator: operator, refreshTable: refreshTable);
+                            return OperatorDetails(
+                                operator: operator, refreshTable: refreshTable);
                           },
                         );
                       },
@@ -219,41 +222,41 @@ class OperatorList extends StatelessWidget {
               .toList(),
         ),
         const Spacer(),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
+        const Padding(
+          padding: EdgeInsets.all(8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              IconButton(
-                onPressed: () {
-                  //TODO: Handle previous page button tap
-                },
-                icon: Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFFD7ECF7),
-                  ),
-                  child: const Icon(Icons.arrow_back),
-                ),
-              ),
-              const SizedBox(width: 16), // Adjust spacing as needed
-              Text(
-                'Page 1 of 5', // Replace with actual page number
-                style: CTextTheme.blackTextTheme.headlineMedium,
-              ),
-              const SizedBox(width: 16), // Adjust spacing as needed
-              IconButton(
-                onPressed: () {
-                  //TODO: Handle next page button tap
-                },
-                icon: Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFFD7ECF7),
-                  ),
-                  child: const Icon(Icons.arrow_forward),
-                ),
-              ),
+              // IconButton(
+              //   onPressed: () {
+              //     //TODO: Handle previous page button tap
+              //   },
+              //   icon: Container(
+              //     decoration: const BoxDecoration(
+              //       shape: BoxShape.circle,
+              //       color: Color(0xFFD7ECF7),
+              //     ),
+              //     child: const Icon(Icons.arrow_back),
+              //   ),
+              // ),
+              // const SizedBox(width: 16), // Adjust spacing as needed
+              // Text(
+              //   'Page 1 of 5', // Replace with actual page number
+              //   style: CTextTheme.blackTextTheme.headlineMedium,
+              // ),
+              // const SizedBox(width: 16), // Adjust spacing as needed
+              // IconButton(
+              //   onPressed: () {
+              //     //TODO: Handle next page button tap
+              //   },
+              //   icon: Container(
+              //     decoration: const BoxDecoration(
+              //       shape: BoxShape.circle,
+              //       color: Color(0xFFD7ECF7),
+              //     ),
+              //     child: const Icon(Icons.arrow_forward),
+              //   ),
+              // ),
             ],
           ),
         ),

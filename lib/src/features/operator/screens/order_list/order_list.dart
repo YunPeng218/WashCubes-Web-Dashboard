@@ -54,7 +54,6 @@ class OrderTableState extends State<OrderTable> {
           final List<dynamic> orderData = data['orders'];
           final List<Order> fetchedOrders =
               orderData.map((order) => Order.fromJson(order)).toList();
-          print(fetchedOrders);
           setState(() {
             orders = fetchedOrders;
             allOrders = fetchedOrders;
@@ -74,7 +73,7 @@ class OrderTableState extends State<OrderTable> {
   List<Order> filterOrders(List<Order> orders, String? filter) {
     if (filter == null) {
       return orders;
-    }   
+    }
     return orders
         .where((order) => order.orderStage?.getInProgressStatus() == filter)
         .toList();
@@ -236,11 +235,11 @@ class OrderList extends StatelessWidget {
               'Tag ID',
               style: CTextTheme.greyTextTheme.headlineMedium,
             )),
-            DataColumn(
-                label: Text(
-              'User ID',
-              style: CTextTheme.greyTextTheme.headlineMedium,
-            )),
+            // DataColumn(
+            //     label: Text(
+            //   'User ID',
+            //   style: CTextTheme.greyTextTheme.headlineMedium,
+            // )),
             DataColumn(
                 label: Text(
               'Service Type',
@@ -270,12 +269,12 @@ class OrderList extends StatelessWidget {
                         order.barcodeID,
                         style: CTextTheme.blackTextTheme.headlineMedium,
                       ))),
-                  DataCell(SizedBox(
-                      width: 80,
-                      child: Text(
-                        order.user?.phoneNumber.toString() ?? 'Loading...',
-                        style: CTextTheme.blackTextTheme.headlineMedium,
-                      ))),
+                  // DataCell(SizedBox(
+                  //     width: 80,
+                  //     child: Text(
+                  //       order.user?.phoneNumber.toString() ?? 'Loading...',
+                  //       style: CTextTheme.blackTextTheme.headlineMedium,
+                  //     ))),
                   DataCell(SizedBox(
                     width: 100,
                     child: FutureBuilder<String>(
@@ -297,13 +296,12 @@ class OrderList extends StatelessWidget {
                   )),
                   DataCell(
                     Text(
-                        order.orderStage?.getInProgressStatus() ??
-                        'Loading...',
-                        style: CTextTheme.blackTextTheme.headlineMedium?.copyWith(
-                        color: _getStatusColor(
-                          order.orderStage?.getInProgressStatus() ??
-                        'Loading...')),
-                      ),
+                      order.orderStage?.getInProgressStatus() ?? 'Loading...',
+                      style: CTextTheme.blackTextTheme.headlineMedium?.copyWith(
+                          color: _getStatusColor(
+                              order.orderStage?.getInProgressStatus() ??
+                                  'Loading...')),
+                    ),
                   ),
                   DataCell(
                     ElevatedButton(
@@ -326,42 +324,42 @@ class OrderList extends StatelessWidget {
               .toList(),
         ),
         const Spacer(),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
+        const Padding(
+          padding: EdgeInsets.all(8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              IconButton(
-                onPressed: () {
-                  //TODO: Handle previous page button tap
-                },
-                icon: Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFFD7ECF7),
-                  ),
-                  child: const Icon(Icons.arrow_back),
-                ),
-              ),
+              // IconButton(
+              //   onPressed: () {
+              //     //TODO: Handle previous page button tap
+              //   },
+              //   icon: Container(
+              //     decoration: const BoxDecoration(
+              //       shape: BoxShape.circle,
+              //       color: Color(0xFFD7ECF7),
+              //     ),
+              //     child: const Icon(Icons.arrow_back),
+              //   ),
+              // ),
 
-              const SizedBox(width: 16), // Adjust spacing as needed
-              Text(
-                'Page 1 of 5', // Replace with actual page number
-                style: CTextTheme.blackTextTheme.headlineMedium,
-              ),
-              const SizedBox(width: 16), // Adjust spacing as needed
-              IconButton(
-                onPressed: () {
-                  //TODO: Handle next page button tap
-                },
-                icon: Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFFD7ECF7),
-                  ),
-                  child: const Icon(Icons.arrow_forward),
-                ),
-              ),
+              // const SizedBox(width: 16), // Adjust spacing as needed
+              // Text(
+              //   'Page 1 of 5', // Replace with actual page number
+              //   style: CTextTheme.blackTextTheme.headlineMedium,
+              // ),
+              // const SizedBox(width: 16), // Adjust spacing as needed
+              // IconButton(
+              //   onPressed: () {
+              //     //TODO: Handle next page button tap
+              //   },
+              //   icon: Container(
+              //     decoration: const BoxDecoration(
+              //       shape: BoxShape.circle,
+              //       color: Color(0xFFD7ECF7),
+              //     ),
+              //     child: const Icon(Icons.arrow_forward),
+              //   ),
+              // ),
             ],
           ),
         ),

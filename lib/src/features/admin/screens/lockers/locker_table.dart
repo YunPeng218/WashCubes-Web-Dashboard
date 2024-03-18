@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:washcubes_admindashboard/src/features/admin/screens/lockers/locker_details.dart';
 import 'package:washcubes_admindashboard/src/utilities/theme/widget_themes/text_theme.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:washcubes_admindashboard/config.dart';
+import 'package:washcubes_admindashboard/src/models/locker.dart';
 
 class LockerTable extends StatefulWidget {
   const LockerTable({super.key});
@@ -10,28 +14,44 @@ class LockerTable extends StatefulWidget {
 }
 
 class _LockerTableState extends State<LockerTable> {
+  List<LockerSite> lockerSites = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchLockerSites();
+  }
+
+  Future<void> fetchLockerSites() async {
+    try {
+      var reqUrl = '${url}lockers';
+      final response = await http.get(Uri.parse(reqUrl));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+
+        if (data.containsKey('lockers')) {
+          final List<dynamic> lockerData = data['lockers'];
+          final List<LockerSite> fetchedLockerSites =
+              lockerData.map((site) => LockerSite.fromJson(site)).toList();
+          setState(() {
+            lockerSites = fetchedLockerSites;
+          });
+        } else {
+          print('No lockers found.');
+        }
+      } else {
+        // If the server did not return a 200 OK response, throw an exception.
+        throw Exception('Failed to load locker sites');
+      }
+    } catch (error) {
+      print('Error fetching locker sites: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-
-    //TODO: Replace with actual Rider data
-    final List<LockerDataRow> lockers = [
-      LockerDataRow(
-        location: "Taylor's University", 
-        area: 'Subang Jaya, Selangor', 
-        status: 'Available'
-      ),
-      LockerDataRow(
-        location: "Sunway Geo Residences", 
-        area: 'Subang Jaya, Selangor', 
-        status: 'Occupied'
-      ),
-      LockerDataRow(
-        location: "Tropicana City Office Tower", 
-        area: 'Petaling Jaya, Selangor', 
-        status: 'Available'
-      ),
-    ];
 
     return Column(
       children: [
@@ -45,39 +65,42 @@ class _LockerTableState extends State<LockerTable> {
             )),
             DataColumn(
                 label: Text(
-              'AREA',
+              'ADDRESS',
               style: CTextTheme.greyTextTheme.headlineMedium,
             )),
-            DataColumn(
-                label: Text(
-              'STATUS',
-              style: CTextTheme.greyTextTheme.headlineMedium,
-            )),
+            // DataColumn(
+            //     label: Text(
+            //   'STATUS',
+            //   style: CTextTheme.greyTextTheme.headlineMedium,
+            // )),
             const DataColumn(label: Text('')),
           ],
-          rows: lockers
+          rows: lockerSites
               .map(
                 (locker) => DataRow(cells: [
                   DataCell(Text(
-                    locker.location,
+                    locker.name,
                     style: CTextTheme.blackTextTheme.headlineMedium,
                   )),
                   DataCell(Text(
-                    locker.area,
+                    locker.address,
                     style: CTextTheme.blackTextTheme.headlineMedium,
                   )),
-                  DataCell(Text(
-                    locker.status,
-                    style: locker.status == 'Available' ? CTextTheme.blueTextTheme.headlineMedium : CTextTheme.redTextTheme.headlineMedium,
-                  )),
+                  // DataCell(Text(
+                  //   locker.status,
+                  //   style: locker.status == 'Available' ? CTextTheme.blueTextTheme.headlineMedium : CTextTheme.redTextTheme.headlineMedium,
+                  // )),
                   DataCell(
                     ElevatedButton(
                       onPressed: () {
                         showDialog(
-                          context: context, 
+                          context: context,
                           builder: (BuildContext context) {
-                            return const LockerDetails();
-                          },);
+                            return LockerDetails(
+                              lockerSite: locker,
+                            );
+                          },
+                        );
                       },
                       child: Text(
                         'Check',
@@ -92,16 +115,4 @@ class _LockerTableState extends State<LockerTable> {
       ],
     );
   }
-}
-
-class LockerDataRow {
-  final String location;
-  final String area;
-  final String status;
-
-  LockerDataRow({
-    required this.location,
-    required this.area,
-    required this.status,
-  });
 }

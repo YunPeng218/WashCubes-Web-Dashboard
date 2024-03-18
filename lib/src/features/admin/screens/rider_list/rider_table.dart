@@ -68,7 +68,8 @@ class _RiderTableState extends State<RiderTable> {
       return riders;
     }
     return riders
-        .where((riders) => (riders.name.toLowerCase()).contains(keyword.toLowerCase()))
+        .where((riders) =>
+            (riders.name.toLowerCase()).contains(keyword.toLowerCase()))
         .toList();
   }
 
@@ -141,10 +142,7 @@ class _RiderTableState extends State<RiderTable> {
           ),
         ),
         Flexible(
-          child: RiderList(
-            riders: riders,
-            refreshTable: fetchRidersDetails
-          ),
+          child: RiderList(riders: riders, refreshTable: fetchRidersDetails),
         ),
       ],
     );
@@ -203,7 +201,8 @@ class RiderList extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return RiderDetails(rider: rider, refreshTable: refreshTable);
+                            return RiderDetails(
+                                rider: rider, refreshTable: refreshTable);
                           },
                         );
                       },
@@ -218,41 +217,41 @@ class RiderList extends StatelessWidget {
               .toList(),
         ),
         const Spacer(),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
+        const Padding(
+          padding: EdgeInsets.all(8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              IconButton(
-                onPressed: () {
-                  //TODO: Handle previous page button tap
-                },
-                icon: Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFFD7ECF7),
-                  ),
-                  child: const Icon(Icons.arrow_back),
-                ),
-              ),
-              const SizedBox(width: 16), // Adjust spacing as needed
-              Text(
-                'Page 1 of 5', // Replace with actual page number
-                style: CTextTheme.blackTextTheme.headlineMedium,
-              ),
-              const SizedBox(width: 16), // Adjust spacing as needed
-              IconButton(
-                onPressed: () {
-                  //TODO: Handle next page button tap
-                },
-                icon: Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFFD7ECF7),
-                  ),
-                  child: const Icon(Icons.arrow_forward),
-                ),
-              ),
+              // IconButton(
+              //   onPressed: () {
+              //     //TODO: Handle previous page button tap
+              //   },
+              //   icon: Container(
+              //     decoration: const BoxDecoration(
+              //       shape: BoxShape.circle,
+              //       color: Color(0xFFD7ECF7),
+              //     ),
+              //     child: const Icon(Icons.arrow_back),
+              //   ),
+              // ),
+              // const SizedBox(width: 16), // Adjust spacing as needed
+              // Text(
+              //   'Page 1 of 5', // Replace with actual page number
+              //   style: CTextTheme.blackTextTheme.headlineMedium,
+              // ),
+              // const SizedBox(width: 16), // Adjust spacing as needed
+              // IconButton(
+              //   onPressed: () {
+              //     //TODO: Handle next page button tap
+              //   },
+              //   icon: Container(
+              //     decoration: const BoxDecoration(
+              //       shape: BoxShape.circle,
+              //       color: Color(0xFFD7ECF7),
+              //     ),
+              //     child: const Icon(Icons.arrow_forward),
+              //   ),
+              // ),
             ],
           ),
         ),

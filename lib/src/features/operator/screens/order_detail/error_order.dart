@@ -33,7 +33,7 @@ class OrderErrorState extends State<OrderError> {
     super.initState();
   }
 
-    //Confirmation Pop Up
+  //Confirmation Pop Up
   Future<String?> showConfirmationDialog(BuildContext context) async {
     return showDialog<String>(
       context: context,
@@ -52,7 +52,7 @@ class OrderErrorState extends State<OrderError> {
         headers: {'Content-Type': 'application/json'},
       );
       if (response.statusCode == 200) {
-        Navigator.pop(context);
+        //Navigator.pop(context);
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -60,11 +60,12 @@ class OrderErrorState extends State<OrderError> {
               title: Text(
                 'Order Return Approved',
                 textAlign: TextAlign.center,
+                style: CTextTheme.blackTextTheme.headlineLarge,
               ),
               content: Text(
                 'The order return request for Order ${widget.order?.orderNumber} has been approved.',
                 textAlign: TextAlign.center,
-                // style: CTextTheme.blackTextTheme.headlineSmall,
+                style: CTextTheme.blackTextTheme.headlineSmall,
               ),
               actions: <Widget>[
                 Row(
@@ -76,7 +77,7 @@ class OrderErrorState extends State<OrderError> {
                         },
                         child: Text(
                           'Nice!',
-                          //style: CTextTheme.blackTextTheme.headlineSmall,
+                          style: CTextTheme.blackTextTheme.headlineSmall,
                         ),
                       ),
                     ),
@@ -125,7 +126,6 @@ class OrderErrorState extends State<OrderError> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              //TODO: Change order ID to be dynamic
               Text(
                 'Order Number: ${widget.order?.orderNumber ?? 'Loading...'}',
                 style: CTextTheme.blackTextTheme.displayLarge,
@@ -146,7 +146,8 @@ class OrderErrorState extends State<OrderError> {
                             style: CTextTheme.greyTextTheme.headlineMedium,
                           ),
                           title: Text(
-                            getFormattedDateTime(widget.order?.createdAt.toString()),
+                            getFormattedDateTime(
+                                widget.order?.createdAt.toString()),
                             style: CTextTheme.blackTextTheme.headlineMedium,
                           ),
                         ),
@@ -183,9 +184,13 @@ class OrderErrorState extends State<OrderError> {
                             style: CTextTheme.greyTextTheme.headlineMedium,
                           ),
                           title: Text(
-                            widget.order?.orderStage?.getInProgressStatus() ?? 'Loading...',
-                            style: CTextTheme.blackTextTheme.headlineMedium?.copyWith(
-                              color: widget.order?.orderStage?.getInProgressStatus() == 'Order Error'
+                            widget.order?.orderStage?.getInProgressStatus() ??
+                                'Loading...',
+                            style: CTextTheme.blackTextTheme.headlineMedium
+                                ?.copyWith(
+                              color: widget.order?.orderStage
+                                          ?.getInProgressStatus() ==
+                                      'Order Error'
                                   ? Colors.red
                                   : Colors.grey,
                             ),
@@ -216,7 +221,9 @@ class OrderErrorState extends State<OrderError> {
                             style: CTextTheme.greyTextTheme.headlineMedium,
                           ),
                           title: Text(
-                            getFormattedDateTime(widget.order?.orderStage?.inProgress.dateUpdated?.toString()),
+                            getFormattedDateTime(widget
+                                .order?.orderStage?.inProgress.dateUpdated
+                                ?.toString()),
                             style: CTextTheme.blackTextTheme.headlineMedium,
                           ),
                         ),
@@ -321,26 +328,24 @@ class OrderErrorState extends State<OrderError> {
                         ListTile(
                           leading: Text(
                             'ERROR SETTLEMENT',
-                            style:
-                                CTextTheme.blackTextTheme.headlineMedium,
+                            style: CTextTheme.blackTextTheme.headlineMedium,
                           ),
                         ),
                         ListTile(
                           leading: Text(
                             'STATUS',
-                            style:
-                                CTextTheme.greyTextTheme.headlineMedium,
+                            style: CTextTheme.greyTextTheme.headlineMedium,
                           ),
-                          title: widget.order!.orderStage!.orderError.userRejected
+                          title: widget
+                                  .order!.orderStage!.orderError.userRejected
                               ? Text(
                                   'Declined (Requested for order return)',
-                                  style: CTextTheme
-                                      .redTextTheme.headlineMedium,
+                                  style: CTextTheme.redTextTheme.headlineMedium,
                                 )
                               : Text(
                                   'Waiting For User Decision',
-                                  style: CTextTheme
-                                      .greyTextTheme.headlineMedium,
+                                  style:
+                                      CTextTheme.greyTextTheme.headlineMedium,
                                 ),
                         ),
                       ],
@@ -354,23 +359,25 @@ class OrderErrorState extends State<OrderError> {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return ImageProof(widget.order!.orderStage!.orderError.proofPicUrl);
+                                return ImageProof(widget
+                                    .order!.orderStage!.orderError.proofPicUrl);
                               },
                             );
                           },
                           child: Text(
                             'Proof',
-                            style:
-                                CTextTheme.blackTextTheme.headlineMedium,
+                            style: CTextTheme.blackTextTheme.headlineMedium,
                           )),
                       const SizedBox(
                         width: 10.0,
                       ),
                       Visibility(
-                        visible: widget.order!.orderStage!.orderError.userRejected,
+                        visible:
+                            widget.order!.orderStage!.orderError.userRejected,
                         child: ElevatedButton(
                           onPressed: () async {
-                            final result = await showConfirmationDialog(context);
+                            final result =
+                                await showConfirmationDialog(context);
                             if (result == 'Confirm') {
                               approveOrderReturn();
                               Navigator.pop(context);
