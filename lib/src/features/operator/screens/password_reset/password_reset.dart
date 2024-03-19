@@ -53,7 +53,7 @@ class _PasswordResetState extends State<PasswordReset> {
 
     if (oldPassword.isEmpty) {
       setState(() {
-        errorTextOldPassword = 'Please Enter Your Old Password.';
+        errorTextOldPassword = 'Please enter your old password.';
         isNotValidateOldPassword = true;
       });
       return;
@@ -93,13 +93,18 @@ class _PasswordResetState extends State<PasswordReset> {
       }
     } else {
       setState(() {
-        errorTextPassword = 'Please Enter Your Password.';
+        errorTextPassword = 'Please enter your new password.';
         isNotValidatePassword = true;
       });
     }
 
     // Confirm password validation
-    if (newPassword != confirmPassword) {
+    if (confirmPassword.isEmpty) {
+      setState(() {
+        errorTextPassword1 = 'Please enter your confirm password.';
+        isNotValidatePassword1 = true;
+      });
+    } else if (newPassword != confirmPassword) {
       setState(() {
         errorTextPassword1 = 'Passwords do not match.';
         isNotValidatePassword1 = true;
