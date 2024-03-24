@@ -143,10 +143,15 @@ class OrderTableState extends State<OrderTable> {
           ),
         ),
         Flexible(
-          child: OrderList(
-            orders: filteredOrders,
-            refreshOrders: fetchOrders,
-          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              OrderList(
+                orders: filteredOrders,
+                refreshOrders: fetchOrders,
+              ),
+            ],
+          )
         ),
       ],
     );
@@ -214,10 +219,9 @@ class OrderList extends StatelessWidget {
   Widget build(BuildContext context) {
     // Accessing device-specific information
     final screenWidth = MediaQuery.of(context).size.width;
-
-    return Column(
-      children: [
-        DataTable(
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+        child: DataTable(
           columnSpacing: screenWidth * 0.07,
           columns: [
             DataColumn(
@@ -323,47 +327,6 @@ class OrderList extends StatelessWidget {
               )
               .toList(),
         ),
-        const Spacer(),
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // IconButton(
-              //   onPressed: () {
-              //     //TODO: Handle previous page button tap
-              //   },
-              //   icon: Container(
-              //     decoration: const BoxDecoration(
-              //       shape: BoxShape.circle,
-              //       color: Color(0xFFD7ECF7),
-              //     ),
-              //     child: const Icon(Icons.arrow_back),
-              //   ),
-              // ),
-
-              // const SizedBox(width: 16), // Adjust spacing as needed
-              // Text(
-              //   'Page 1 of 5', // Replace with actual page number
-              //   style: CTextTheme.blackTextTheme.headlineMedium,
-              // ),
-              // const SizedBox(width: 16), // Adjust spacing as needed
-              // IconButton(
-              //   onPressed: () {
-              //     //TODO: Handle next page button tap
-              //   },
-              //   icon: Container(
-              //     decoration: const BoxDecoration(
-              //       shape: BoxShape.circle,
-              //       color: Color(0xFFD7ECF7),
-              //     ),
-              //     child: const Icon(Icons.arrow_forward),
-              //   ),
-              // ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 
