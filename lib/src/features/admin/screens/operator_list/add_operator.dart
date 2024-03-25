@@ -168,7 +168,7 @@ class _AddOperatorState extends State<AddOperator> {
   Future<void> uploadImage() async {
     try {
       final url =
-          Uri.parse('https://api.cloudinary.com/v1_1/ddweldfmx/upload');
+          Uri.parse('');
       final request = http.MultipartRequest('POST', url)
         ..fields['upload_preset'] = 'xcbbr3ok'
         ..files.add(

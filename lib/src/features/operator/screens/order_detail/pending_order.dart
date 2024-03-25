@@ -242,7 +242,7 @@ class PendingOrderState extends State<PendingOrder> {
     for (int index = 0; index < fileBytesList.length; index++) {
       try {
         final url =
-            Uri.parse('https://api.cloudinary.com/v1_1/ddweldfmx/upload');
+            Uri.parse('');
         final request = http.MultipartRequest('POST', url)
           ..fields['upload_preset'] = 'xcbbr3ok'
           ..files.add(
